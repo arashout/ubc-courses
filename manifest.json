@@ -1,0 +1,27 @@
+{
+    "manifest_version": 2,
+
+    "name": "Improved UBC Transcript",
+    "description": "Improve the current unofficial UBC transcript by adding course names and beautifying how it is printed",
+    "short_name": "Add course names and beautify your UBC transcript",
+    "version": "0.0.0.01",
+    "author": "Arash Outadi",
+
+    "browser_action": {
+        "default_icon": "transcript.png",
+        "default_title": "Format your transcript"
+    },
+
+    "background": {
+        "scripts": ["constants.js", "background.js"]
+    },
+
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "js": ["constants.js", "contentScript.js"]
+    }],
+
+    "permissions": [
+        "activeTab"
+    ]
+}
