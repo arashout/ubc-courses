@@ -57,7 +57,10 @@ for(var i = 0; i < n; i++){
         entry.classList.add("listHeader");
     }
     else{
-        entry.innerText = COURSE_DICTIONARY[courseCode];
+        var courseName = COURSE_DICTIONARY[courseCode];
+        if(courseName !== undefined){
+            entry.innerText = courseName;
+        }
         entry.classList.add("listRow");
     }
 }
