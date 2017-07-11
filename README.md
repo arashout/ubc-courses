@@ -8,7 +8,7 @@ It does this in three ways:
 
 ## Instructions FROM [crclayton's github](https://github.com/crclayton/ubc-unofficial-transcript-exporter)
 
-1. There's a link on [**this page**]() that you should drag onto your bookmarks bar. <sup><sup>Sorry for the redirect, I can't embed bookmarklets on GitHub</sup></sup>
+1. There's a link on [**this page**]() that you should drag onto your bookmarks bar
 
 2. Go to your [**Grades Summary**](https://ssc.adm.ubc.ca/sscportal/servlets/SRVSSCFramework?function=SessGradeRpt) page.
 
