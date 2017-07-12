@@ -9,22 +9,31 @@ function replaceNbsps(str) {
   return str.replace(re, ' ');
 }
 
-function httpGetAsync(theUrl, element, callback)
+function httpGetAsync(url, callback)
 {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText, element);
+            callback(xmlHttp.responseText);
     }
-    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.open("GET", url, true); // true for asynchronous 
     xmlHttp.send(null);
 }
 
-function changeElementFromResponse(responseContent, element){
-    var responseObject = JSON.parse(responseContent);
-    var courseName = responseObject['name'];
-    if(courseName !== undefined){
-        element['innerText'] = courseName;
+/**
+ * Ridiculous name!
+ * @param {*} element 
+ */
+function createChangeCourseNameCallback(element){
+    return function(response){
+        var course = JSON.parse(response);
+        if(course['name'] !== undefined){
+            element['innerText'] = course['name'];
+        }
+        else{
+            console.log(response);
+            console.log(course);
+        }
     }
 }
 
@@ -64,8 +73,7 @@ var tableBody = tableElement.children[0];
 var tableRows = tableBody.children;
 var n = tableRows.length;
 
-var root = "https://jsonplaceholder.typicode.com";
-var urlWithoutNumber = root + '/users/';
+var rootAPIUrl = "https://arashout.pythonanywhere.com/course/api/v1.0/code/";
 
 for(var i = tableRows.length - 1; i >= 0; i--){
     var row = tableRows[i];
@@ -83,7 +91,8 @@ for(var i = tableRows.length - 1; i >= 0; i--){
             entry.classList.add('listHeader');
         }
         else{
-            httpGetAsync(urlWithoutNumber + (i - 10), entry, changeElementFromResponse);
+            var apiURL = rootAPIUrl + courseCode;
+            httpGetAsync(apiURL, createChangeCourseNameCallback(entry));
             entry.classList.add('listRow');
         }
     }
