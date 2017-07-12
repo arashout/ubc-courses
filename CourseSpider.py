@@ -34,6 +34,6 @@ for subject_link in subject_links:
         course_dictionary[course_code] = course_name
     time.sleep(3)
 
-with open('courses.json', 'w') as f:
+with open('current_courses.json', 'w') as f:
     json.dump(course_dictionary, f)
 
