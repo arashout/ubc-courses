@@ -3,6 +3,7 @@ var COURSE_DICTIONARY = Object.freeze(
 );
 var COL_INDEX = Object.freeze({
     COURSE_CODE: 0,
+    LETTER_GRADE: 3,
     STANDING: 10
 });
 
@@ -43,25 +44,32 @@ function formatGradeSummary(){
 var iframe = formatGradeSummary();
 
 var tableElement = iframe.getElementById('allSessionsGrades');
-var tableRows = tableElement.children[0].children;
+var tableBody = tableElement.children[0];
+var tableRows = tableBody.children;
 var n = tableRows.length;
 
-for(var i = 0; i < n; i++){
+for(var i = tableRows.length - 1; i >= 0; i--){
     var row = tableRows[i];
     row.removeChild(row.children[COL_INDEX.STANDING]);
     var courseCode = replaceNbsps(row.children[COL_INDEX.COURSE_CODE].innerText);
-    var entry = row.insertCell(1);
-    entry.style.textAlign = 'center';
-    if(i === 0){
-        entry.innerText = 'Course Name';
-        entry.classList.add('listHeader');
+    var letterGrade = row.children[COL_INDEX.LETTER_GRADE].innerText;
+    if(letterGrade === ''){
+        tableBody.removeChild(row);
     }
     else{
-        var courseName = COURSE_DICTIONARY[courseCode];
-        if(courseName !== undefined){
-            entry.innerText = courseName;
+        var entry = row.insertCell(1);
+        entry.style.textAlign = 'center';
+        if(i === 0){
+            entry.innerText = 'Course Name';
+            entry.classList.add('listHeader');
         }
-        entry.classList.add('listRow');
+        else{
+            var courseName = COURSE_DICTIONARY[courseCode];
+            if(courseName !== undefined){
+                entry.innerText = courseName;
+            }
+            entry.classList.add('listRow');
+        }
     }
 }
 
