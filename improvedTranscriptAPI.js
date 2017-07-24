@@ -16,12 +16,12 @@ function httpGetAsync(url, callback)
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
             callback(xmlHttp.responseText);
     }
-    xmlHttp.open("GET", url, true); // true for asynchronous 
+    xmlHttp.open('GET', url, true); // true for asynchronous 
     xmlHttp.send(null);
 }
 
 /**
- * Ridiculous name!
+ * Ridiculous name! Function that returns and callback function for changing the entry element to the course name
  * @param {*} element 
  */
 function createChangeCourseNameCallback(element){
@@ -73,7 +73,7 @@ var tableBody = tableElement.children[0];
 var tableRows = tableBody.children;
 var n = tableRows.length;
 
-var rootAPIUrl = "https://arashout.pythonanywhere.com/course/api/v1.0/code/";
+var rootAPIUrl = 'https://arashout.pythonanywhere.com/course/api/v1.0/code/';
 
 for(var i = tableRows.length - 1; i >= 0; i--){
     var row = tableRows[i];
@@ -97,5 +97,3 @@ for(var i = tableRows.length - 1; i >= 0; i--){
         }
     }
 }
-
-iframe.querySelector('#printer').click();

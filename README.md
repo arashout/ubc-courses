@@ -19,7 +19,12 @@ It does this in four ways:
 
 The code gets rid of the extra tabs/average calculator app, spaces things out a little better, and aligns the table to the header. 
 
-![Improved Transcript Example](./TranscriptImprovedExample.png "Logo Title Text 1")
+![Improved Transcript Example](./TranscriptImprovedExample.png "Improved Transcript Example")
+
+## Before Picture
+
+This is what the transcript looked like before
+![Before Transcript Example](./Before.png "Before Transcript Example")
 
 ### Known Issues:
 Some older courses that no longer exist will have empty course name columns. 
