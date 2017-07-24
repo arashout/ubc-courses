@@ -19,7 +19,7 @@ It does this in four ways:
 
 The code gets rid of the extra tabs/average calculator app, spaces things out a little better, and aligns the table to the header. 
 
-![Improved Transcript Example](./TranscriptImprovedExample.png "Improved Transcript Example")
+![After Transcript Example](./After.png "After Transcript Example")
 
 ## Before Picture
 
