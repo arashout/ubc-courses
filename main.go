@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 )
@@ -13,7 +14,13 @@ func GetCourseEndpoint(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
 	router := mux.NewRouter()
 	router.HandleFunc("/course/{id}", GetCourseEndpoint).Methods("GET")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
