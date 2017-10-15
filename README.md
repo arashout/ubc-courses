@@ -9,7 +9,7 @@ It does this in four ways:
 
 ## Instructions from [crclayton's github](https://github.com/crclayton/ubc-unofficial-transcript-exporter)
 
-1. There's a link on [**this page**](http://arashout.site/improvedUBCTranscript.html) that you should drag onto your bookmarks bar
+1. There's a link on [**this page**](http://arashout.site/posts/improved-ubc-transcript) that you should drag onto your bookmarks bar
 
 2. Go to your [**Grades Summary**](https://ssc.adm.ubc.ca/sscportal/servlets/SRVSSCFramework?function=SessGradeRpt) page.
 
