@@ -30,7 +30,6 @@ for subject_link in subject_links:
             current_course_dict[course_code] = course_name
             print('{0} : {1} Added'.format(course_code, course_name))
 
-
     time.sleep(5)
 with open('all_courses.json', 'w') as f:
     json.dump(current_course_dict, f)
