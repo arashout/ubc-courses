@@ -22,5 +22,5 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/course/{id}", GetCourseEndpoint).Methods("GET")
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }
