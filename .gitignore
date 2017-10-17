@@ -140,3 +140,5 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# Javascript files
+*.js
