@@ -142,3 +142,6 @@ ENV/
 
 # Javascript files
 *.js
+
+# Virtual enviroment
+.env/
