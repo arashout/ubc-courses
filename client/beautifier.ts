@@ -47,6 +47,7 @@ const tableRows = tableBody.children;
 const n = tableRows.length;
 
 let courseList: string[] = [];
+let courseCellMap: Map<string, HTMLTableCellElement> = new Map();
 
 // Reverse loop so that we can remove rows during iteration
 for (let i = tableRows.length - 1; i >= 0; i--) {
@@ -63,7 +64,7 @@ for (let i = tableRows.length - 1; i >= 0; i--) {
 
     // Collect course names to send via HTTP request
     // Add a new column for the course name
-    const cellCourseCode = <HTMLElement>row.children[COL_INDEX.COURSE_CODE];
+    const cellCourseCode = <HTMLTableCellElement>row.children[COL_INDEX.COURSE_CODE];
     const courseCode = replaceNbsps(cellCourseCode.innerText);
     courseList.push(courseCode);
 
@@ -75,17 +76,22 @@ for (let i = tableRows.length - 1; i >= 0; i--) {
     }
     else {
         cellCourseName.id = courseCode
+        courseCellMap.set(courseCode, cellCourseCode);
         cellCourseName.classList.add('listRow');
     }
 }
 
 const testAPIEndpoint = 'https://requestb.in/pocqospo';
-const apiEndpoint = 'https://arashout.pythonanywhere.com/course/api/v1.0/code';
+const apiEndpoint = 'https://arashout.pythonanywhere.com/course/codes';
 
-let completeURL = testAPIEndpoint + '?';
-courseList.forEach( (courseCode: string) => {
-    completeURL += `code=${courseCode}&`;
-});
+let completeURL = apiEndpoint + '?';
+for (let i = 0; i < courseList.length; i++) {
+    const courseCode = courseList[i];
+    // If statement is for getting rid of fluff
+    if(courseCode !== '' && courseCode !== 'Course'){
+        completeURL += `c${i}=${courseCode}&`;
+    }
+}
 
 fetch(completeURL, {
     method: 'GET',
@@ -95,5 +101,16 @@ fetch(completeURL, {
     }
 })
 .then( (response: Response) => response.json() )
+.catch( (reason: string) => {
+    console.log(reason);
+})
 .then( (obj: any) => {
+    console.log(obj);
 });
+
+// FOR Debugging
+courseCellMap.forEach( (cell, courseCode) => {
+    cell.innerText = courseCode;
+});
+
+// TODO: Loop over keys of response
