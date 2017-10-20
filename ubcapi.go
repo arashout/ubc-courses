@@ -15,8 +15,6 @@ type Course struct {
 // Global courses map
 var courseMap map[string]string
 
-const port = "8000"
-
 func readCourses(filepath string) {
 	fp, err := os.Open(filepath)
 	if err != nil {
@@ -30,7 +28,9 @@ func readCourses(filepath string) {
 }
 
 func main() {
-	readCourses("data/courses_shortened_names.json")
+	port := os.Getenv("PORT")
+	coursesFilePath := os.Getenv("COURSES_FILE_PATH")
+	readCourses(coursesFilePath)
 
 	router := NewRouter()
 
