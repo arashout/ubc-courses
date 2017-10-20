@@ -34,5 +34,6 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 			log.Fatalf("Cannot marshal JSON: %s", err.Error())
 			return
 		}
+		w.Header().Set("Content-Type", "application/json")
 	}
 }
