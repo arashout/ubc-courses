@@ -29,6 +29,11 @@ func readCourses(filepath string) {
 
 func main() {
 	port := os.Getenv("PORT")
+
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
 	coursesFilePath := os.Getenv("COURSES_FILE_PATH")
 	readCourses(coursesFilePath)
 
