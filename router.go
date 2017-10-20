@@ -14,7 +14,7 @@ func NewRouter() *mux.Router {
 		func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
 			w.Header().Set("Access-Control-Allow-Methods", "GET")
-			w.Header().Set("Access-Control-Allow-Headers", "Authorization, Lang")
+			w.Header().Set("Access-Control-Allow-Headers", "Authorization, Lang, Content-Type")
 		})
 
 	for _, route := range routes {
