@@ -1,0 +1,12 @@
+{
+	"ImportPath": "github.com/arashout/ubcapi",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.5.0-3-g9bd9ff2",
+			"Rev": "9bd9ff2d1d2a0660d35050674f2c3112547997af"
+		}
+	]
+}
