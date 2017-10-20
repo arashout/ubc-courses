@@ -81,8 +81,7 @@ for (let i = tableRows.length - 1; i >= 0; i--) {
     }
 }
 
-const testAPIEndpoint = 'https://requestb.in/pocqospo';
-const apiEndpoint = 'https://arashout.pythonanywhere.com/course/codes';
+const apiEndpoint = 'https://ubacpi.herokuapp.com/courses';
 
 let completeURL = apiEndpoint + '?';
 for (let i = 0; i < courseList.length; i++) {
