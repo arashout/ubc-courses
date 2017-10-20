@@ -97,9 +97,13 @@ fetch(completeURL, {
     headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
-    }
+    },
+    mode: 'cors',
 })
-.then( (response: Response) => response.json() )
+.then( (response: Response) => {
+    console.log(JSON.parse(response.toString()));
+    return response.json() 
+})
 .catch( (reason: string) => {
     console.log(reason);
 })
