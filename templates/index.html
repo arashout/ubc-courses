@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/index.css') }}">
+    <title>Unofficial UBC Courses REST API</title>
+</head>
+<body>
+<h1>Unofficial UBC Courses REST API</h1>
+<h3>Current Status: ONLINE</h3>
+<div>
+    <h4>Commands:</h4>
+    <p>Base URL: https://arashout.pythonanywhere.com </p>
+    <table style="width:100%">
+        <tr>
+            <th>METHOD</th>
+            <th>COMMAND</th>
+            <th>PARAMETERS</th>
+            <th>RESPONSE</th>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/course/api/v1.0/code/<strong>course_code</strong> </td>
+            <td>course_code : string <br> e.g. MATH 307 </td>
+            <td>course_object : {'code', 'name'} <br> e.g. {'code' : 'MATH 307', 'name' : 'Applied Linear Algebra'}</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
