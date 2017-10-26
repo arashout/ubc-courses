@@ -7,7 +7,7 @@ app = Flask(__name__)
 sslify = SSLify(app)
 
 current_directory = os.path.dirname(__file__)
-json_courses_path = os.path.join(current_directory,'courses.json')
+json_courses_path = os.path.join(current_directory, 'data', 'courses.json')
 
 with open(json_courses_path, 'r') as f:
     course_dictionary = json.load(f)
