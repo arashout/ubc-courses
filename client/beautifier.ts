@@ -1,3 +1,6 @@
+interface CourseMap {
+    [key: string]: string;
+}
 // Column indexes of those that matter
 const COL_INDEX = Object.freeze({
     COURSE_CODE: 0,
@@ -47,7 +50,6 @@ const tableRows = tableBody.children;
 const n = tableRows.length;
 
 let courseList: string[] = [];
-let courseCellMap: Map<string, HTMLTableCellElement> = new Map();
 
 // Reverse loop so that we can remove rows during iteration
 for (let i = tableRows.length - 1; i >= 0; i--) {
@@ -76,12 +78,11 @@ for (let i = tableRows.length - 1; i >= 0; i--) {
     }
     else {
         cellCourseName.id = courseCode
-        courseCellMap.set(courseCode, cellCourseCode);
         cellCourseName.classList.add('listRow');
     }
 }
 
-const apiEndpoint = 'https://ubacpi.herokuapp.com/courses';
+const apiEndpoint = 'https://arashout.pythonanywhere.com/courses';
 
 let completeURL = apiEndpoint + '?';
 for (let i = 0; i < courseList.length; i++) {
@@ -101,19 +102,14 @@ fetch(completeURL, {
     mode: 'cors',
 })
 .then( (response: Response) => {
-    console.log(JSON.parse(response.toString()));
     return response.json() 
 })
 .catch( (reason: string) => {
     console.log(reason);
 })
-.then( (obj: any) => {
-    console.log(obj);
+.then( (courseMap: CourseMap) => {
+    courseList.forEach( (courseCode: string) => {
+        const cellCourseName = <HTMLTableCellElement>iframe.getElementById(courseCode);
+        cellCourseName.innerText = courseMap[courseCode];
+    });
 });
-
-// FOR Debugging
-courseCellMap.forEach( (cell, courseCode) => {
-    cell.innerText = courseCode;
-});
-
-// TODO: Loop over keys of response
