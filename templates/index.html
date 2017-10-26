@@ -21,13 +21,13 @@
         </tr>
         <tr>
             <td>GET</td>
-            <td>/course/<strong>{{course_code}}</strong> </td>
+            <td>/course/<strong>course_code</strong> </td>
             <td>course_code : string <br> e.g. MATH 307 </td>
             <td>course_object : {'code', 'name'} <br> e.g. {'code' : 'MATH 307', 'name' : 'Applied Linear Algebra'}</td>
         </tr>
         <tr>
             <td>GET</td>
-            <td>/courses?c0=<strong>{{course_code0}}</strong>&#38;c1=<strong>{{course_code1}}</strong> (...)</td>
+            <td>/courses?c0=<strong>course_code0</strong>&#38;c1=<strong>course_code1</strong> (...)</td>
             <td>course_code : string <br> e.g. MATH 307 </td>
             <td>course_object array : {'code', 'name'}[] <br> e.g.
                 [
