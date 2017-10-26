@@ -41,10 +41,12 @@ def get_courses():
 def index():
     return render_template('index.html')
 
+# CORS
 @app.after_request
 def apply_caching(response):
     response.headers['Access-Control-Allow-Origin'] = 'https://ssc.adm.ubc.ca'
     response.headers['Access-Control-Allow-Methods'] = 'GET'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
 
 if __name__ == '__main__':
