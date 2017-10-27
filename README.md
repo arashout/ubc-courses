@@ -6,8 +6,9 @@ It does this in four ways:
 2. Removing any courses without grades (Will upload a version that doesn't do this, just in case people want that)
 3. Removing unnecessary widgets (calculator), columns (I didn't think the standing column added much information)
 4. Spacing items out better and increasing the width of the table (It will appear as if some columns are cut-off but it looks fine in the print preview)
+5. You can also manually edit the course names now to fix mistakes or shorten course names
 
-## Instructions from [crclayton's github](https://github.com/crclayton/ubc-unofficial-transcript-exporter)
+## Instructions
 
 1. There's a link on [**this page**](http://arashout.site/posts/improved-ubc-transcript) that you should drag onto your bookmarks bar
 
@@ -28,5 +29,3 @@ This is what the transcript looked like before
 
 ### Known Issues:
 Some older courses that no longer exist will have empty course name columns. 
-The only fix for this is to manually add the names yourself by editing the html 
-or providing a link with all old course names that I can add to the dictionary used in the script. 
