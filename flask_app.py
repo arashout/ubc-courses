@@ -36,6 +36,8 @@ def get_courses():
 
     if VERSION_KEY in all_args:
         response_dict[VERSION_KEY] = VERSION
+        # Delete the query key so we don't iterate over it below
+        del all_args[VERSION_KEY]
 
     for _, course_code in all_args.items():
         if course_code in course_dictionary:
