@@ -74,7 +74,11 @@ for (let i = tableRows.length - 1; i >= 0; i--) {
     // Add a new column for the course name
     const cellCourseCode = <HTMLTableCellElement>row.children[COL_INDEX_RETRIEVAL.COURSE_CODE];
     const courseCode = replaceNbsps(cellCourseCode.innerText);
-    courseList.push(courseCode);
+    // If statement is for getting rid of fluff
+    if(courseCode !== '' && courseCode !== 'Course'){
+        courseList.push(courseCode);
+    }
+    
 
     // Remove useless columns
     row.removeChild(row.children[COL_INDEX_REMOVAL.STANDING]);
@@ -96,12 +100,9 @@ for (let i = tableRows.length - 1; i >= 0; i--) {
 let queryString = '';
 for (let i = 0; i < courseList.length; i++) {
     const courseCode = courseList[i];
-    // If statement is for getting rid of fluff
-    if(courseCode !== '' && courseCode !== 'Course'){
-        queryString += `c${i}=${courseCode}&`;
-    }
+    queryString += `c${i}=${courseCode}&`;
 }
-queryString += `version=${VERSION}`
+queryString += `${VERSION_KEY}=${VERSION}`
 
 const apiEndpoint = 'https://arashout.pythonanywhere.com/courses';
 const completeURL = apiEndpoint + '?' + queryString;
