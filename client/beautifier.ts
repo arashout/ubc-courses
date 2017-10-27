@@ -2,7 +2,7 @@ interface CourseMap {
     [key: string]: string;
 }
 
-const VERSION = '1.0';
+const VERSION = '1.1';
 const VERSION_KEY = 'version_key';
 const URL_SOURCE = 'http://arashout.site/posts/improved-ubc-transcript';
 
@@ -133,6 +133,7 @@ fetch(completeURL, {
 
     courseList.forEach( (courseCode: string) => {
         const cellCourseName = <HTMLTableCellElement>iframe.getElementById(courseCode);
+        cellCourseName.contentEditable = 'true';
         cellCourseName.innerText = courseMap[courseCode];
     });
 });

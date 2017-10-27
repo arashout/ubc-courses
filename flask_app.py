@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 sslify = SSLify(app)
 
-VERSION = '1.0';
+VERSION = '1.1';
 VERSION_KEY = 'version_key';
 
 CURRENT_DIRECTORY = os.path.dirname(__file__)
