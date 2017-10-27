@@ -6,10 +6,13 @@ import os
 app = Flask(__name__)
 sslify = SSLify(app)
 
-current_directory = os.path.dirname(__file__)
-json_courses_path = os.path.join(current_directory, 'data', 'courses.json')
+VERSION = '1.0';
+VERSION_KEY = 'version_key';
 
-with open(json_courses_path, 'r') as f:
+CURRENT_DIRECTORY = os.path.dirname(__file__)
+PATH_JSON_COURSES = os.path.join(CURRENT_DIRECTORY, 'data', 'courses.json')
+
+with open(PATH_JSON_COURSES, 'r') as f:
     course_dictionary = json.load(f)
 
 @app.route('/course/<string:course_code>', methods=['GET'])
@@ -30,6 +33,9 @@ def get_courses():
     all_args = request.args.to_dict()
 
     response_dict = {}
+
+    if VERSION_KEY in all_args:
+        response_dict[VERSION_KEY] = VERSION
 
     for _, course_code in all_args.items():
         if course_code in course_dictionary:
