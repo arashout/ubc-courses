@@ -1,10 +1,17 @@
 interface CourseMap {
     [key: string]: string;
 }
-// Column indexes of those that matter
-const COL_INDEX = Object.freeze({
+
+const VERSION = '1.0';
+const VERSION_KEY = 'version_key';
+const URL_SOURCE = 'http://arashout.site/posts/improved-ubc-transcript';
+
+const COL_INDEX_RETRIEVAL = Object.freeze({
     COURSE_CODE: 0,
     LETTER_GRADE: 3,
+});
+const COL_INDEX_REMOVAL = Object.freeze({
+    SECTION: 1,
     STANDING: 10
 });
 
@@ -54,10 +61,9 @@ let courseList: string[] = [];
 // Reverse loop so that we can remove rows during iteration
 for (let i = tableRows.length - 1; i >= 0; i--) {
     let row = <HTMLTableRowElement>tableRows[i];
-    // Remove useless columns
-    row.removeChild(row.children[COL_INDEX.STANDING]);
+
     // If there is no letter grade than remove the row and move to the next iteration!
-    const cellLetterGrade = <HTMLElement>row.children[COL_INDEX.LETTER_GRADE];
+    const cellLetterGrade = <HTMLElement>row.children[COL_INDEX_RETRIEVAL.LETTER_GRADE];
     const letterGrade = cellLetterGrade.innerText;
     if (letterGrade === '') {
         tableBody.removeChild(row);
@@ -66,9 +72,13 @@ for (let i = tableRows.length - 1; i >= 0; i--) {
 
     // Collect course names to send via HTTP request
     // Add a new column for the course name
-    const cellCourseCode = <HTMLTableCellElement>row.children[COL_INDEX.COURSE_CODE];
+    const cellCourseCode = <HTMLTableCellElement>row.children[COL_INDEX_RETRIEVAL.COURSE_CODE];
     const courseCode = replaceNbsps(cellCourseCode.innerText);
     courseList.push(courseCode);
+
+    // Remove useless columns
+    row.removeChild(row.children[COL_INDEX_REMOVAL.STANDING]);
+    row.removeChild(row.children[COL_INDEX_REMOVAL.SECTION]);
 
     let cellCourseName = row.insertCell(1);
     cellCourseName.style.textAlign = 'center';
@@ -82,16 +92,19 @@ for (let i = tableRows.length - 1; i >= 0; i--) {
     }
 }
 
-const apiEndpoint = 'https://arashout.pythonanywhere.com/courses';
-
-let completeURL = apiEndpoint + '?';
+// Build API endpoint with params
+let queryString = '';
 for (let i = 0; i < courseList.length; i++) {
     const courseCode = courseList[i];
     // If statement is for getting rid of fluff
     if(courseCode !== '' && courseCode !== 'Course'){
-        completeURL += `c${i}=${courseCode}&`;
+        queryString += `c${i}=${courseCode}&`;
     }
 }
+queryString += `version=${VERSION}`
+
+const apiEndpoint = 'https://arashout.pythonanywhere.com/courses';
+const completeURL = apiEndpoint + '?' + queryString;
 
 fetch(completeURL, {
     method: 'GET',
@@ -108,6 +121,15 @@ fetch(completeURL, {
     console.log(reason);
 })
 .then( (courseMap: CourseMap) => {
+    if(courseMap[VERSION_KEY] !== VERSION){
+        alert(`
+        You do not have the latest version of the bookmarklet which means it may not
+        work properly or you may be missing new features.\n
+        Get the latest version from:\n${URL_SOURCE}\n\n
+        Version: ${VERSION}\tNewest Version: ${courseMap[VERSION_KEY]}
+        `);
+    }
+
     courseList.forEach( (courseCode: string) => {
         const cellCourseName = <HTMLTableCellElement>iframe.getElementById(courseCode);
         cellCourseName.innerText = courseMap[courseCode];
