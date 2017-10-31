@@ -1,12 +1,14 @@
-# ImprovedUBCTranscript
-Bookmarklet that builds on top of [crclayton](https://github.com/crclayton) bookmarklet to improve the unofficial UBC Transcript.
+# UBC API
+## What it does:
+Beautifies the lacking unofficial UBC transcript with extra information and better formatting.
 
-It does this in four ways:
-1. Adding a course names columns (Main thing missing from crclayton awesome bookmarklet)
-2. Removing any courses without grades (Will upload a version that doesn't do this, just in case people want that)
-3. Removing unnecessary widgets (calculator), columns (I didn't think the standing column added much information)
-4. Spacing items out better and increasing the width of the table (It will appear as if some columns are cut-off but it looks fine in the print preview)
-5. You can also manually edit the course names now to fix mistakes or shorten course names
+## How it does this:
+It does this in several ways:
+1. Adding a course names columns
+2. Removing unnecessary widgets
+3. Spacing items out better and increasing the width of the table 
+4. Allow you to manually edit course names
+5. Optionally allow you to remove unnecessary columns + rows
 
 ## Instructions
 
@@ -27,5 +29,12 @@ The code gets rid of the extra tabs/average calculator app, spaces things out a 
 This is what the transcript looked like before
 ![Before Transcript Example](./Before.png "Before Transcript Example")
 
-### Known Issues:
-Some older courses that no longer exist will have empty course name columns. 
+## How it works:
+This application is split into 2 parts the [the bookmarklet](#Bookmarklet) and [the server](#The Server)
+
+### Bookmarklet
+
+### The Server
+
+## Credits:
+- [crclayton](https://github.com/crclayton) originally created the bookmarklet that formatted the transcript, I'm simply building off of it.
