@@ -1,8 +1,13 @@
 interface CourseMap {
     [key: string]: string;
-}
+};
+interface UserChoice {
+    removeNoGradeRow: boolean;
+    removeSectionColumn: boolean;
+    removeStandingColumn: boolean;
+};
 
-const VERSION = '1.1';
+const VERSION = '1.2';
 const VERSION_KEY = 'version_key';
 const URL_SOURCE = 'http://arashout.site/posts/improved-ubc-transcript';
 
@@ -14,6 +19,11 @@ const COL_INDEX_REMOVAL = Object.freeze({
     SECTION: 1,
     STANDING: 10
 });
+const BIT_FLAGS = Object.freeze({
+    KEEP_NO_GRADE_ROW: 1, // 001
+    KEEP_SECTION_COLUMN: 2, // 010
+    KEEP_STANDING_COLUMN: 4, // 100
+})
 
 // Replace the HTML space character thing with empty string
 function replaceNbsps(str: string): string {
@@ -48,6 +58,14 @@ function formatGradeSummary(iframeDocument: Document): void {
     iframeDocument.querySelector('#tabs')!.setAttribute('style', 'margin: 0px auto; width:800px');
 }
 
+function getUserChoice(bitmask: number) : UserChoice {
+    return {
+        removeNoGradeRow: !(bitmask & BIT_FLAGS.KEEP_NO_GRADE_ROW),
+        removeSectionColumn: !(bitmask & BIT_FLAGS.KEEP_SECTION_COLUMN),
+        removeStandingColumn: !(bitmask & BIT_FLAGS.KEEP_STANDING_COLUMN), 
+    }
+}
+
 const iframe = (<HTMLIFrameElement>document.querySelector('#iframe-main')).contentWindow.document;
 formatGradeSummary(iframe);
 
@@ -58,14 +76,28 @@ const n = tableRows.length;
 
 let courseList: string[] = [];
 
+// Get user input about what features they want
+const promptMessage = `
+    001: Keep courses with no grades\n
+    010: Keep the section column\n
+    100: Keep the standing column\n
+    0: Default behaviour (Remove all clutter)\n
+    e.g Type 011 to enable the first 2 options
+    `;
+const bitmaskString = <string> prompt(promptMessage, '0');
+const bitmask = parseInt(bitmaskString, 2);
+const userChoice = getUserChoice(bitmask);
+console.log(userChoice);
+
 // Reverse loop so that we can remove rows during iteration
 for (let i = tableRows.length - 1; i >= 0; i--) {
-    let row = <HTMLTableRowElement>tableRows[i];
+    const row = <HTMLTableRowElement>tableRows[i];
+    console.log(row);
 
     // If there is no letter grade than remove the row and move to the next iteration!
     const cellLetterGrade = <HTMLElement>row.children[COL_INDEX_RETRIEVAL.LETTER_GRADE];
     const letterGrade = cellLetterGrade.innerText;
-    if (letterGrade === '') {
+    if ( userChoice.removeNoGradeRow && letterGrade === '') {
         tableBody.removeChild(row);
         continue;
     }
@@ -78,11 +110,13 @@ for (let i = tableRows.length - 1; i >= 0; i--) {
     if(courseCode !== '' && courseCode !== 'Course'){
         courseList.push(courseCode);
     }
-    
 
     // Remove useless columns
-    row.removeChild(row.children[COL_INDEX_REMOVAL.STANDING]);
-    row.removeChild(row.children[COL_INDEX_REMOVAL.SECTION]);
+    console.log(row.children[COL_INDEX_REMOVAL.SECTION]);
+    console.log(row.children[COL_INDEX_REMOVAL.STANDING]);
+    // Remove higher index first to avoid indexing problems
+    if( userChoice.removeStandingColumn ){ row.removeChild(row.children[COL_INDEX_REMOVAL.STANDING]); }
+    if( userChoice.removeSectionColumn ){ row.removeChild(row.children[COL_INDEX_REMOVAL.SECTION]); }
 
     let cellCourseName = row.insertCell(1);
     cellCourseName.style.textAlign = 'center';
