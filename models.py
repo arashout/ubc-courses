@@ -3,7 +3,6 @@ import os
 import typing
 
 import mongoengine as me
-import pymongo
 
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 PATH_JSON_COURSES = os.path.join(CURRENT_DIRECTORY, 'data', 'courses.json')
@@ -26,11 +25,11 @@ class Course(me.Document):
 
     def clean(self):
         self.name = self.name.strip()
-    
+
     # FOR DEBUGGING
     def __str__(self):
         return "{0} : {1} -> {2}".format(self.code, self.name, self.course_name_scores)
-    
+
     def __repr__(self):
         return "{0} : {1} -> {2}".format(self.code, self.name, self.course_name_scores)
 
@@ -52,7 +51,7 @@ class DAOWrapper:
 
     def insert(self, course: Course):
         course.save()
-    
+
     def get(self, course_code: str) -> Course:
         try:
             return Course.objects.get(pk=course_code)
