@@ -5,5 +5,8 @@
 debug
 ubcapi
 
+# Python
+*.pyc
+
 # VSCODE
 .vscode/
