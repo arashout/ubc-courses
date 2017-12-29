@@ -1,3 +1,5 @@
+import * as util from './util'
+
 interface CourseMap {
     [key: string]: string;
 };
