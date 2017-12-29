@@ -59,7 +59,7 @@ class DAOWrapper:
         )
         # NOTE: 'connect=False' is to avoid connection pooling sine PyMongo is not fork-safe
         # Basically it will make PythonAnywhere setup work...
-        me.connect(host=uri, connect=False)
+        me.connect(host=uri, connect=False, maxPoolSize=1)
 
     def insert_many(self, courses: typing.List[Course]):
         Course.objects.insert(courses)
