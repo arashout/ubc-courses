@@ -1,0 +1,4 @@
+mongoengine==0.15.0
+Flask==0.12.2
+flask_sslify==0.1.5
+typing==3.6.2
