@@ -18,6 +18,7 @@ dao_wrapper = models.DAOWrapper(
 VERSION = '1.2'
 VERSION_KEY = 'version_key'
 
+API_STATUS = 'OFFLINE (maintenance)'
 
 @app.route('/course/<string:course_code>', methods=['GET'])
 def get_course(course_code):
@@ -55,7 +56,7 @@ def get_courses():
 
 @app.route('/')
 def index():
-    return render_template('index.html', version=VERSION)
+    return render_template('index.html', version=VERSION, status=API_STATUS)
 
 
 @app.after_request
