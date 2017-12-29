@@ -130,3 +130,4 @@ if __name__ == '__main__':
         os.environ['DB_HOST'],
         os.environ['DB_PORT']
     )
+    insert_courses_from_dict(dao_wrapper)
