@@ -1,32 +1,40 @@
-from flask import Flask, jsonify, render_template, request
-from flask_sslify import SSLify
 import json
 import os
+import typing
+
+from flask import Flask, jsonify, render_template, request
+from flask_sslify import SSLify
+
+import models
 
 app = Flask(__name__)
 sslify = SSLify(app)
 
-VERSION = '1.2';
-VERSION_KEY = 'version_key';
+dao_wrapper = models.DAOWrapper(
+    os.environ['DB_USER'],
+    os.environ['DB_PASSWORD'],
+    os.environ['DB_HOST'],
+    os.environ['DB_PORT']
+)
 
-CURRENT_DIRECTORY = os.path.dirname(__file__)
-PATH_JSON_COURSES = os.path.join(CURRENT_DIRECTORY, 'data', 'courses.json')
+VERSION = '1.2'
+VERSION_KEY = 'version_key'
 
-with open(PATH_JSON_COURSES, 'r') as f:
-    course_dictionary = json.load(f)
 
 @app.route('/course/<string:course_code>', methods=['GET'])
-def get_task(course_code):
-    if course_code in course_dictionary:
+def get_course(course_code):
+    course: models.Course = dao_wrapper.get(course_code)
+    if course is not None:
         return jsonify({
-            'code': course_code,
-            'name': course_dictionary[course_code]
+            'code': course.code,
+            'name': course.name
         })
     else:
         return jsonify({
-            'code':course_code,
+            'code': course_code,
             'name': ''
         })
+
 
 @app.route('/courses', methods=['GET'])
 def get_courses():
@@ -39,23 +47,27 @@ def get_courses():
         # Delete the query key so we don't iterate over it below
         del all_args[VERSION_KEY]
 
-    for _, course_code in all_args.items():
-        if course_code in course_dictionary:
-            response_dict[course_code] = course_dictionary[course_code]
+    course_codes = list(all_args.values())
+    courses = dao_wrapper.get_many(course_codes)
+    for course in courses:
+        response_dict[course.code] = course.name
 
     return jsonify(response_dict)
+
 
 @app.route('/')
 def index():
     return render_template('index.html', version=VERSION)
 
-# CORS
+
 @app.after_request
 def apply_caching(response):
+    """Response headers added for CORS protection"""
     response.headers['Access-Control-Allow-Origin'] = 'https://ssc.adm.ubc.ca'
     response.headers['Access-Control-Allow-Methods'] = 'GET'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
+
 
 if __name__ == '__main__':
     app.run()

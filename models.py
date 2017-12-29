@@ -98,7 +98,7 @@ class DAOWrapper:
 
                     c.save()
 
-    def get(self, course_code: str) -> Course:
+    def get(self, course_code: str) -> typing.Optional[Course]:
         try:
             return Course.objects.get(pk=course_code)
         except me.DoesNotExist:
