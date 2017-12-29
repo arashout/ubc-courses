@@ -1,12 +1,12 @@
 import os
 
 from flask import Flask, jsonify, render_template, request
-from flask_sslify import SSLify
+# from flask_sslify import SSLify
 
 import models
 
 app = Flask(__name__)
-sslify = SSLify(app)
+# sslify = SSLify(app)
 
 dao_wrapper = models.DAOWrapper(
     os.environ['DB_USER'],

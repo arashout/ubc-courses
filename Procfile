@@ -1,0 +1,1 @@
+web: gunicorn hello:app --preload --timeout 10
