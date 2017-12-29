@@ -10,3 +10,6 @@ ubcapi
 
 # VSCODE
 .vscode/
+
+# Heroku
+.env
