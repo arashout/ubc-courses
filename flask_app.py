@@ -1,6 +1,4 @@
-import json
 import os
-import typing
 
 from flask import Flask, jsonify, render_template, request
 from flask_sslify import SSLify
