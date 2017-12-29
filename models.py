@@ -57,8 +57,9 @@ class DAOWrapper:
             db_port,
             DB_NAME
         )
-        # I hate this... Why does it not give me back a connection object
-        me.connect(host=uri)
+        # NOTE: 'connect=False' is to avoid connection pooling sine PyMongo is not fork-safe
+        # Basically it will make PythonAnywhere setup work...
+        me.connect(host=uri, connect=False)
 
     def insert_many(self, courses: typing.List[Course]):
         Course.objects.insert(courses)
