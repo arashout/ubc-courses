@@ -7,3 +7,9 @@ ubcapi
 
 # VSCODE
 .vscode/
+
+# Heroku
+.env
+
+# Pycache
+__pycache__
