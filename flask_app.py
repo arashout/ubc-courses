@@ -33,6 +33,11 @@ def get_task(course_code):
             'name': ''
         })
 
+def isCourseQueryParam(param_key: str) -> bool:
+    if pattern_course.match(param_key) is not None:
+        return True
+    return False
+
 @app.route('/courses', methods=['GET'])
 def get_courses():
     all_args: dict = request.args.to_dict()
@@ -64,11 +69,6 @@ def apply_caching(response):
     response.headers['Access-Control-Allow-Methods'] = 'GET'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
-
-def isCourseQueryParam(param_key: str) -> bool:
-    if pattern_course.match(param_key) is not None:
-        return True
-    return False
 
 if __name__ == '__main__':
     app.run()
