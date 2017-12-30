@@ -62,7 +62,7 @@ def get_courses():
 
 @app.route('/')
 def index():
-    return render_template('index.html', version=VERSION, status=API_STATUS)
+    return render_template('index.html', version=VERSION, api_status=API_STATUS)
 
 # CORS
 @app.after_request
