@@ -13,3 +13,6 @@ ubcapi
 
 # Heroku
 .env
+
+# Pycache
+__pycache__
