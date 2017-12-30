@@ -2,12 +2,19 @@ from flask import Flask, jsonify, render_template, request
 from flask_sslify import SSLify
 import json
 import os
+import re
 
 app = Flask(__name__)
 sslify = SSLify(app)
 
-VERSION = '1.2';
-VERSION_KEY = 'version_key';
+pattern_course = re.compile(r'c\d+')
+
+API_STATUS = 'ONLINE'
+
+VERSION = '1.2'
+VERSION_KEY = 'version_key'
+
+DIGEST_KEY = 'digest_key'
 
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 PATH_JSON_COURSES = os.path.join(CURRENT_DIRECTORY, 'data', 'courses.json')
@@ -28,26 +35,34 @@ def get_task(course_code):
             'name': ''
         })
 
+def isCourseQueryParam(param_key: str) -> bool:
+    if pattern_course.match(param_key) is not None:
+        return True
+    return False
+
 @app.route('/courses', methods=['GET'])
 def get_courses():
-    all_args = request.args.to_dict()
+    all_args: dict = request.args.to_dict()
 
     response_dict = {}
 
     if VERSION_KEY in all_args:
         response_dict[VERSION_KEY] = VERSION
-        # Delete the query key so we don't iterate over it below
-        del all_args[VERSION_KEY]
+    
+    # TODO: Use this to prevent many requests
+    if DIGEST_KEY in all_args:
+        pass
 
-    for _, course_code in all_args.items():
-        if course_code in course_dictionary:
+    for key, value in all_args.items():
+        if (isCourseQueryParam(key) and value in course_dictionary):
+            course_code = value
             response_dict[course_code] = course_dictionary[course_code]
 
     return jsonify(response_dict)
 
 @app.route('/')
 def index():
-    return render_template('index.html', version=VERSION)
+    return render_template('index.html', version=VERSION, api_status=API_STATUS)
 
 # CORS
 @app.after_request
