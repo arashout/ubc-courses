@@ -87,12 +87,10 @@ const promptMessage = `
 const bitmaskString = <string> prompt(promptMessage, '0');
 const bitmask = parseInt(bitmaskString, 2);
 const userChoice = getUserChoice(bitmask);
-console.log(userChoice);
 
 // Reverse loop so that we can remove rows during iteration
 for (let i = tableRows.length - 1; i >= 0; i--) {
     const row = <HTMLTableRowElement>tableRows[i];
-    console.log(row);
 
     // If there is no letter grade than remove the row and move to the next iteration!
     const cellLetterGrade = <HTMLElement>row.children[COL_INDEX_RETRIEVAL.LETTER_GRADE];
@@ -112,8 +110,6 @@ for (let i = tableRows.length - 1; i >= 0; i--) {
     }
 
     // Remove useless columns
-    console.log(row.children[COL_INDEX_REMOVAL.SECTION]);
-    console.log(row.children[COL_INDEX_REMOVAL.STANDING]);
     // Remove higher index first to avoid indexing problems
     if( userChoice.removeStandingColumn ){ row.removeChild(row.children[COL_INDEX_REMOVAL.STANDING]); }
     if( userChoice.removeSectionColumn ){ row.removeChild(row.children[COL_INDEX_REMOVAL.SECTION]); }
