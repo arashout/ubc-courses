@@ -9,6 +9,8 @@ sslify = SSLify(app)
 
 pattern_course = re.compile(r'c\d+')
 
+API_STATUS = 'ONLINE'
+
 VERSION = '1.2'
 VERSION_KEY = 'version_key'
 
@@ -60,7 +62,7 @@ def get_courses():
 
 @app.route('/')
 def index():
-    return render_template('index.html', version=VERSION)
+    return render_template('index.html', version=VERSION, status=API_STATUS)
 
 # CORS
 @app.after_request
