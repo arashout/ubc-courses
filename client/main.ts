@@ -156,7 +156,7 @@ for (let i = 0; i < courseList.length; i++) {
 queryString += `${VERSION_KEY}=${VERSION}&`
 
 // Create a unique digest for each user without (Avoid use of student number)
-const digest = util.hashFnv32a(courseList.join());
+const digest = hashFnv32a(courseList.join());
 queryString += `${DIGEST_KEY}=${digest}`;
 
 const apiEndpoint = 'https://arashout.pythonanywhere.com/courses';
