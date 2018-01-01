@@ -19,6 +19,7 @@ dao_wrapper = models.DAOWrapper(
 pattern_course = re.compile(r'c\d+')
 
 API_STATUS = 'ONLINE'
+API_URL = 'https://ubc-api.herokuapp.com'
 
 VERSION = '1.2'
 VERSION_KEY = 'version_key'
@@ -78,7 +79,7 @@ def get_courses():
 
 @app.route('/')
 def index():
-    return render_template('index.html', version=VERSION, api_status=API_STATUS)
+    return render_template('index.html', version=VERSION, api_status=API_STATUS, api_url=API_URL)
 
 
 @app.after_request
