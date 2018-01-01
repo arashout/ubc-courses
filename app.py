@@ -18,7 +18,7 @@ dao_wrapper = models.DAOWrapper(
 )
 pattern_course = re.compile(r'c\d+')
 
-API_STATUS = 'OFFLINE'
+API_STATUS = 'ONLINE'
 
 VERSION = '1.2'
 VERSION_KEY = 'version_key'
