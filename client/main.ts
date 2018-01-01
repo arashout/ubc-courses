@@ -31,7 +31,8 @@ interface UserChoice {
 const VERSION = '1.2';
 const VERSION_KEY = 'version_key';
 const DIGEST_KEY = 'digest_key';
-const URL_SOURCE = 'http://arashout.site/posts/improved-ubc-transcript';
+const SOURCE_URL = 'http://arashout.site/posts/improved-ubc-transcript';
+const API_URL = 'https://ubc-api.herokuapp.com';
 
 const COL_INDEX_RETRIEVAL = Object.freeze({
     COURSE_CODE: 0,
@@ -159,8 +160,8 @@ queryString += `${VERSION_KEY}=${VERSION}&`
 const digest = hashFnv32a(courseList.join());
 queryString += `${DIGEST_KEY}=${digest}`;
 
-const apiEndpoint = 'https://arashout.pythonanywhere.com/courses';
-const completeURL = apiEndpoint + '?' + queryString;
+const coursesPath = '/courses'
+const completeURL = API_URL + coursesPath + '?' + queryString;
 
 fetch(completeURL, {
     method: 'GET',
@@ -181,7 +182,7 @@ fetch(completeURL, {
             alert(`
         You do not have the latest version of the bookmarklet which means it may not
         work properly or you may be missing new features.\n
-        Get the latest version from:\n${URL_SOURCE}\n\n
+        Get the latest version from:\n${SOURCE_URL}\n\n
         Version: ${VERSION}\tNewest Version: ${courseMap[VERSION_KEY]}
         `);
         }

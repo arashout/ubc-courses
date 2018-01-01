@@ -1,0 +1,20 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[requires]
+python_full_version = "3.6.3"
+
+[packages]
+
+mongoengine = "==0.15.0"
+flask = "==0.12.2"
+flask-sslify = "==0.1.5"
+typing = "==3.6.2"
+gunicorn = "*"
+
+
+[dev-packages]
+
