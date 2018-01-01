@@ -68,7 +68,7 @@ def get_courses():
     if DIGEST_KEY in all_args:
         pass
 
-    course_codes = list(getCleanQueryParams(all_args).values)
+    course_codes = list(getCleanQueryParams(all_args).values())
     courses = dao_wrapper.get_many(course_codes)
     for course in courses:
         response_dict[course.code] = course.name
