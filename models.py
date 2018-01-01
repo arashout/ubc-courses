@@ -31,7 +31,7 @@ class CourseNameScore(me.EmbeddedDocument):
         return "{0} : {1}".format(self.name, self.score)
 
 
-class Course(me.Document):
+class AbstractCourse(me.Document):
     code = me.StringField(primary_key=True)
     name = me.StringField(required=True)
     course_name_scores = me.ListField(
@@ -46,6 +46,17 @@ class Course(me.Document):
 
     def __repr__(self):
         return "{0} : {1} -> {2}".format(self.code, self.name, self.course_name_scores)
+
+    meta = {
+        'allow_inheritance': True,
+        'abstract': True
+    }
+
+
+class Course(AbstractCourse):
+    meta = {
+        'collection': 'courses-live'
+    }
 
 
 class DAOWrapper:
@@ -69,21 +80,25 @@ class DAOWrapper:
 
     # TODO: Way too much logic in this method. Comment and fix somehow
     def update_course(self, _code: str, _name: str):
-        c = self.get(_code)
+        c: Course = self.get(_code)
+        # If the course does not exist in the DB at all
         if c is None:
             self.insert(Course(code=_code, name=_name))
         else:
+            # If the current course name is the same as the updated one
             if c.name == _name:
                 return
             else:
                 current_course_names = list(
                     map(lambda cs: cs.name,  c.course_name_scores))
 
+                # If the updated course name is in the list of suggestions already
                 if _name in current_course_names:
                     i = current_course_names.index(_name)
                     cns: CourseNameScore = c.course_name_scores[i]
                     cns.score = cns.score + 1
 
+                    # The new course name has earned enough to become the default course name for this course
                     if cns.score > SCORE_THRESHOLD:
                         c.name = cns.name
                         c.course_name_scores.pop(i)
