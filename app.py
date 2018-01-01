@@ -25,6 +25,7 @@ VERSION_KEY = 'version_key'
 
 DIGEST_KEY = 'digest_key'
 
+
 @app.route('/course/<string:course_code>', methods=['GET'])
 def get_course(course_code):
     course: models.Course = dao_wrapper.get(course_code)
@@ -40,7 +41,6 @@ def get_course(course_code):
         })
 
 
-
 @app.route('/courses', methods=['GET'])
 def get_courses():
     def getCleanQueryParams(args: typing.Dict[str, str]) -> typing.Dict[str, str]:
@@ -49,12 +49,12 @@ def get_courses():
             if pattern_course.match(param_key) is not None:
                 return True
             return False
-        
+
         cleanedQueryParams = {}
         for key, value in args.items():
             if isCourseQueryParam(key):
                 cleanedQueryParams[key] = value
-        
+
         return cleanedQueryParams
 
     all_args: dict = request.args.to_dict()
@@ -63,12 +63,12 @@ def get_courses():
 
     if VERSION_KEY in all_args:
         response_dict[VERSION_KEY] = VERSION
-    
+
     # TODO: Use this to prevent many requests
     if DIGEST_KEY in all_args:
         pass
 
-    course_codes = list( getCleanQueryParams(all_args).values )
+    course_codes = list(getCleanQueryParams(all_args).values)
     courses = dao_wrapper.get_many(course_codes)
     for course in courses:
         response_dict[course.code] = course.name
@@ -79,6 +79,7 @@ def get_courses():
 @app.route('/')
 def index():
     return render_template('index.html', version=VERSION, api_status=API_STATUS)
+
 
 @app.after_request
 def apply_caching(response):
