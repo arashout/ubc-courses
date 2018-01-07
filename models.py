@@ -9,8 +9,8 @@ PATH_JSON_COURSES = os.path.join(CURRENT_DIRECTORY, 'data', 'courses.json')
 
 DB_NAME = 'ubcapi'
 
-SCORE_THRESHOLD = 3
-MAX_NAME_COUNT = 3
+SCORE_THRESHOLD = 4
+MAX_NAME_COUNT = 10
 
 
 class CourseNameScore(me.EmbeddedDocument):
@@ -108,11 +108,10 @@ class DAOWrapper:
                 else:
                     # Pop off the least popular course name
                     # NOTE: Suggested course names are sorted in order of descending popularity
-                    if len(c.course_name_scores) > MAX_NAME_COUNT:
+                    if len(c.course_name_scores) > MAX_NAME_COUNT - 1:
                         c.course_name_scores.pop()
-
+                    
                     c.course_name_scores.append(CourseNameScore(name=_name))
-
         c.save()
         return c
 
