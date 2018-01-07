@@ -63,6 +63,11 @@ class AbstractLog(me.Document):
     combined_timestamp = me.StringField(required=True)
     courses = me.MapField(field=me.StringField())
 
+    meta = {
+        'allow_inheritance': True,
+        'abstract': True
+    }
+
 class Log(AbstractLog):
     meta = {
         'collection': 'logs-live'
