@@ -151,7 +151,7 @@ def insert_courses_from_dict(dao_wrapper: DAOWrapper, course_dict: dict):
         return dao_wrapper.generic_course(code=course_tuple[0], name=course_tuple[1])
     
     courses = list(map(tuple_to_doc, course_dict.items()))
-    dao_wrapper.insert_many(courses)
+    dao_wrapper.insert_courses(courses)
 
 def insert_courses_from_json(dao_wrapper: DAOWrapper, file_path: str):
     course_dictionary = {}

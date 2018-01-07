@@ -136,7 +136,7 @@ class TestDAO(unittest.TestCase):
             add_name_n_times('Test' + str(i), i)
 
         c: models.AbstractCourse = self.dao_wrapper.get_course(code)
-        print(c.course_name_scores)
+
         self.assert_is_sorted(
             list(map(lambda cns: cns.score, c.course_name_scores))
         )
