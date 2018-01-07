@@ -82,6 +82,7 @@ class DAOWrapper:
             db_port,
             DB_NAME
         )
+
         # NOTE: 'connect=False' is to avoid connection pooling sine PyMongo is not fork-safe
         me.connect(host=uri, connect=False, maxPoolSize=1)
         self.generic_course = generic_course
@@ -94,7 +95,7 @@ class DAOWrapper:
             pass
 
     def insert_course(self, course: AbstractCourse) -> AbstractCourse:
-        self.generic_course.objects.insert(course)
+        return course.save()
 
     # TODO: Way too much logic in this method. 
     def update_course(self, _code: str, _name: str) -> AbstractCourse:
@@ -167,6 +168,7 @@ if __name__ == '__main__':
         os.environ['DB_PASSWORD'],
         os.environ['DB_HOST'],
         os.environ['DB_PORT'],
-        Course
+        Course,
+        Log
     )
     insert_courses_from_json(dao_wrapper, PATH_JSON_COURSES)
