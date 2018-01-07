@@ -9,6 +9,10 @@ class CourseTest(models.AbstractCourse):
         'collection': 'courses-test'
     }
 
+class LogTest(models.AbstractLog):
+    meta = {
+        'collection': 'logs-test'
+    }
 
 COURSE_DICT = {
     'MATH100': 'Differential Calculus with Applications to Physical Sciences and Engineering',
@@ -24,7 +28,8 @@ class TestDAO(unittest.TestCase):
             os.environ['DB_PASSWORD'],
             os.environ['DB_HOST'],
             os.environ['DB_PORT'],
-            CourseTest
+            CourseTest,
+            LogTest
         )
         # Assuming insert works properly
         models.insert_courses_from_dict(self.dao_wrapper, COURSE_DICT)
