@@ -70,7 +70,9 @@ def get_courses():
         pass
 
     course_codes = list(getCleanQueryParams(all_args).values())
+    print(course_codes)
     courses = dao_wrapper.get_courses(course_codes)
+    print(courses)
     for course in courses:
         response_dict[course.code] = course.name
 
