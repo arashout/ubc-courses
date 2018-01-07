@@ -57,6 +57,11 @@ class TestDAO(unittest.TestCase):
         self.assertEqual(c.name, COURSE_DICT.get(code))
 
         self.assertIsNone(self.dao_wrapper.get_course('RAND999'))
+    
+    def test_get_courses(self):
+        codes = ['MATH100', 'MATH152']
+        courses: typing.List[models.AbstractCourse] = self.dao_wrapper.get_courses(codes)
+        self.assertEqual(len(courses),len(codes))
 
     def test_update_not_exist(self):
         code = 'MATH999'
