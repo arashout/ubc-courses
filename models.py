@@ -74,7 +74,7 @@ class Log(AbstractLog):
     }
 
 class DAOWrapper:
-    def __init__(self, db_user, db_password, db_host, db_port, generic_course: AbstractCourse, generic_log: AbstractLog):
+    def __init__(self, db_user, db_password, db_host, db_port, generic_course = Course, generic_log = Log):
         uri = "mongodb://{0}:{1}@{2}:{3}/{4}".format(
             db_user,
             db_password,
