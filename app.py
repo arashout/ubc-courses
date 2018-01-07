@@ -29,7 +29,7 @@ DIGEST_KEY = 'digest_key'
 
 @app.route('/course/<string:course_code>', methods=['GET'])
 def get_course(course_code):
-    course: models.Course = dao_wrapper.get(course_code)
+    course: models.Course = dao_wrapper.get_course(course_code)
     if course is not None:
         return jsonify({
             'code': course.code,
@@ -70,7 +70,7 @@ def get_courses():
         pass
 
     course_codes = list(getCleanQueryParams(all_args).values())
-    courses = dao_wrapper.get_many(course_codes)
+    courses = dao_wrapper.get_courses(course_codes)
     for course in courses:
         response_dict[course.code] = course.name
 

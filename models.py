@@ -59,6 +59,15 @@ class Course(AbstractCourse):
     }
 
 
+class AbstractLog(me.Document):
+    combined_timestamp = me.StringField(required=True)
+    courses = me.MapField(field=me.StringField())
+
+class Log(AbstractLog):
+    meta = {
+        'collection': 'logs-live'
+    }
+
 class DAOWrapper:
     def __init__(self, db_user, db_password, db_host, db_port, generic_course: AbstractCourse):
         uri = "mongodb://{0}:{1}@{2}:{3}/{4}".format(
@@ -72,18 +81,18 @@ class DAOWrapper:
         me.connect(host=uri, connect=False, maxPoolSize=1)
         self.generic_course = generic_course
 
-    def insert_many(self, courses: typing.List[AbstractCourse]):
+    def insert_courses(self, courses: typing.List[AbstractCourse]):
         try:
             self.generic_course.objects.insert(courses, write_concern={'continue_on_error': True})
         except me.NotUniqueError:
             pass
 
-    def insert(self, course: AbstractCourse) -> AbstractCourse:
+    def insert_course(self, course: AbstractCourse) -> AbstractCourse:
         self.generic_course.objects.insert(course)
 
     # TODO: Way too much logic in this method. 
     def update_course(self, _code: str, _name: str) -> AbstractCourse:
-        c: AbstractCourse = self.get(_code)
+        c: AbstractCourse = self.get_course(_code)
         # If the course does not exist in the DB at all
         if c is None:
             c = self.generic_course(code=_code, name=_name)
@@ -115,13 +124,13 @@ class DAOWrapper:
         c.save()
         return c
 
-    def get(self, course_code: str) -> typing.Optional[Course]:
+    def get_course(self, course_code: str) -> typing.Optional[Course]:
         try:
             return self.generic_course.objects.get(pk=course_code)
         except me.DoesNotExist:
             return None
 
-    def get_many(self, course_codes: typing.List[str]) -> typing.List[AbstractCourse]:
+    def get_courses(self, course_codes: typing.List[str]) -> typing.List[AbstractCourse]:
         return list(self.generic_course.objects(pk__in=course_codes))
 
     def drop_collection(self, collection: me.Document):

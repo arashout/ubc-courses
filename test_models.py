@@ -47,16 +47,16 @@ class TestDAO(unittest.TestCase):
 
     def test_get(self):
         code = 'MATH152'
-        c: models.AbstractCourse = self.dao_wrapper.get(code)
+        c: models.AbstractCourse = self.dao_wrapper.get_course(code)
         self.assertIsNotNone(c)
         self.assertEqual(c.name, COURSE_DICT.get(code))
 
-        self.assertIsNone(self.dao_wrapper.get('RAND999'))
+        self.assertIsNone(self.dao_wrapper.get_course('RAND999'))
 
     def test_update_not_exist(self):
         code = 'MATH999'
         name = 'Test Math'
-        self.assertIsNone(self.dao_wrapper.get(code))
+        self.assertIsNone(self.dao_wrapper.get_course(code))
 
         c: models.AbstractCourse = self.dao_wrapper.update_course(code, name)
         self.assertIsNotNone(c)
@@ -130,7 +130,7 @@ class TestDAO(unittest.TestCase):
         for i in range(0, models.MAX_NAME_COUNT-1):
             add_name_n_times('Test' + str(i), i)
 
-        c: models.AbstractCourse = self.dao_wrapper.get(code)
+        c: models.AbstractCourse = self.dao_wrapper.get_course(code)
         print(c.course_name_scores)
         self.assert_is_sorted(
             list(map(lambda cns: cns.score, c.course_name_scores))
