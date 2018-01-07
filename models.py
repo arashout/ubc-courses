@@ -69,7 +69,7 @@ class Log(AbstractLog):
     }
 
 class DAOWrapper:
-    def __init__(self, db_user, db_password, db_host, db_port, generic_course: AbstractCourse):
+    def __init__(self, db_user, db_password, db_host, db_port, generic_course: AbstractCourse, generic_log: AbstractLog):
         uri = "mongodb://{0}:{1}@{2}:{3}/{4}".format(
             db_user,
             db_password,
@@ -80,6 +80,7 @@ class DAOWrapper:
         # NOTE: 'connect=False' is to avoid connection pooling sine PyMongo is not fork-safe
         me.connect(host=uri, connect=False, maxPoolSize=1)
         self.generic_course = generic_course
+        self.generic_log = generic_log
 
     def insert_courses(self, courses: typing.List[AbstractCourse]):
         try:
@@ -133,6 +134,9 @@ class DAOWrapper:
     def get_courses(self, course_codes: typing.List[str]) -> typing.List[AbstractCourse]:
         return list(self.generic_course.objects(pk__in=course_codes))
 
+    def insert_log(self, log: AbstractLog) -> AbstractLog:
+        self.generic_log.objects.insert(log)
+    
     def drop_collection(self, collection: me.Document):
         collection.drop_collection()
 
