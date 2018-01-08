@@ -3,25 +3,33 @@ import re
 import typing
 
 from flask import Flask, jsonify, render_template, request
-# from flask_sslify import SSLify
 
 import models
 
 app = Flask(__name__)
-# sslify = SSLify(app)
 
-dao_wrapper = models.DAOWrapper(
-    os.environ['DB_USER'],
-    os.environ['DB_PASSWORD'],
-    os.environ['DB_HOST'],
-    os.environ['DB_PORT']
-)
+if(os.environ.get('DEV') is not None):
+    dao_wrapper = models.DAOWrapper(
+        os.environ['DB_USER'],
+        os.environ['DB_PASSWORD'],
+        os.environ['DB_HOST'],
+        os.environ['DB_PORT'],
+        models.CourseDev,
+        models.LogDev
+        )
+else:
+    dao_wrapper = models.DAOWrapper(
+        os.environ['DB_USER'],
+        os.environ['DB_PASSWORD'],
+        os.environ['DB_HOST'],
+        os.environ['DB_PORT']
+        )
 pattern_course = re.compile(r'c\d+')
 
 API_STATUS = 'ONLINE'
 API_URL = 'https://ubc-api.herokuapp.com'
 
-VERSION = '1.2'
+VERSION = '1.3'
 VERSION_KEY = 'version_key'
 
 DIGEST_KEY = 'digest_key'
@@ -30,6 +38,9 @@ DIGEST_KEY = 'digest_key'
 @app.route('/course/<string:course_code>', methods=['GET'])
 def get_course(course_code):
     course: models.Course = dao_wrapper.get_course(course_code)
+
+    dao_wrapper.insert_log(request.path, {course.code: course.name})
+
     if course is not None:
         return jsonify({
             'code': course.code,
@@ -61,24 +72,36 @@ def get_courses():
     all_args: dict = request.args.to_dict()
 
     response_dict = {}
+    log_dict = {}
 
     if VERSION_KEY in all_args:
         response_dict[VERSION_KEY] = VERSION
+        log_dict[VERSION_KEY] = VERSION_KEY
 
     # TODO: Use this to prevent many requests
+    hash_digest = "NA"
     if DIGEST_KEY in all_args:
-        pass
+        hash_digest = all_args[DIGEST_KEY]
+        log_dict[DIGEST_KEY] = hash_digest
 
     course_codes = list(getCleanQueryParams(all_args).values())
     courses = dao_wrapper.get_courses(course_codes)
+
     for course in courses:
         response_dict[course.code] = course.name
+        log_dict[course.code] = course.name
+    
+    log_dict['METHOD'] = request.method
+
+    dao_wrapper.insert_log(request.path, log_dict, hash_digest)
 
     return jsonify(response_dict)
 
 
 @app.route('/')
 def index():
+    dao_wrapper.insert_log(request.path)
+
     return render_template('index.html', version=VERSION, api_status=API_STATUS, api_url=API_URL)
 
 

@@ -1,6 +1,7 @@
 import json
 import os
 import typing
+import datetime
 
 import mongoengine as me
 
@@ -9,6 +10,7 @@ PATH_JSON_COURSES = os.path.join(CURRENT_DIRECTORY, 'data', 'courses.json')
 
 DB_NAME = 'ubcapi'
 
+DATE_FORMAT = r'%Y%m%d'
 SCORE_THRESHOLD = 4
 MAX_NAME_COUNT = 10
 
@@ -58,10 +60,21 @@ class Course(AbstractCourse):
         'collection': 'courses-live'
     }
 
+class CourseDev(AbstractCourse):
+    meta = {
+        'collection': 'courses-dev'
+    }
 
 class AbstractLog(me.Document):
-    combined_timestamp = me.StringField(required=True)
-    courses = me.MapField(field=me.StringField())
+    datestamp = me.StringField(required=True)
+    path = me.StringField(required=True)
+    hash_digest = me.StringField()
+    # Can contain 
+    # 1. course_code : course_name - mappings
+    # 2. edit -> course_code : suggested_name
+    # 3. index visits
+
+    data = me.MapField(field=me.StringField())
 
     meta = {
         'allow_inheritance': True,
@@ -71,6 +84,11 @@ class AbstractLog(me.Document):
 class Log(AbstractLog):
     meta = {
         'collection': 'logs-live'
+    }
+
+class LogDev(AbstractLog):
+    meta = {
+        'collection': 'log-dev'
     }
 
 class DAOWrapper:
@@ -95,7 +113,10 @@ class DAOWrapper:
             pass
 
     def insert_course(self, course: AbstractCourse) -> AbstractCourse:
-        return course.save()
+        try:
+            return course.save()
+        except me.NotUniqueError:
+            return None
 
     # TODO: Way too much logic in this method. 
     def update_course(self, _code: str, _name: str) -> AbstractCourse:
@@ -140,8 +161,22 @@ class DAOWrapper:
     def get_courses(self, course_codes: typing.List[str]) -> typing.List[AbstractCourse]:
         return list(self.generic_course.objects(pk__in=course_codes))
 
-    def insert_log(self, log: AbstractLog) -> AbstractLog:
-        self.generic_log.objects.insert(log)
+    def insert_log(self, _path: str, _data = None, hash_digest = None) -> AbstractLog:
+        try:
+            log = self.generic_log()
+            now = datetime.datetime.now()
+            log.datestamp = now.strftime(DATE_FORMAT)
+            log.path = _path
+            
+            if hash_digest is not None:
+                log.hash_digest = hash_digest
+            if _data is not None:
+                log.data = _data
+            
+            return log.save()
+
+        except me.NotUniqueError:
+            return None
     
     def drop_collection(self, collection: me.Document):
         collection.drop_collection()
