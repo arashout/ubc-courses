@@ -14,7 +14,8 @@ dao_wrapper = models.DAOWrapper(
     os.environ['DB_USER'],
     os.environ['DB_PASSWORD'],
     os.environ['DB_HOST'],
-    os.environ['DB_PORT']
+    os.environ['DB_PORT'],
+    models.Course
 )
 pattern_course = re.compile(r'c\d+')
 
