@@ -8,7 +8,7 @@ import models
 
 app = Flask(__name__)
 
-if(os.environ.get('DEV') is not None):
+if os.environ.get('DEV') is not None:
     dao_wrapper = models.DAOWrapper(
         os.environ['DB_USER'],
         os.environ['DB_PASSWORD'],
