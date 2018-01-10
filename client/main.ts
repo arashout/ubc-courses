@@ -28,7 +28,9 @@ interface UserChoice {
     removeStandingColumn: boolean;
 };
 
-const CLIENT_VERSION = "1.2";
+
+const VERSION = '1.21';
+
 const VERSION_KEY = 'version_key';
 const DIGEST_KEY = 'digest_key';
 const SOURCE_URL = 'http://arashout.site/posts/improved-ubc-transcript';

@@ -24,6 +24,7 @@ else:
         os.environ['DB_HOST'],
         os.environ['DB_PORT']
         )
+
 pattern_course = re.compile(r'c\d+')
 
 API_STATUS = 'ONLINE'
