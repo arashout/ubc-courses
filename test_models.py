@@ -3,13 +3,6 @@ import models
 import os
 import typing
 
-
-class CourseTest(models.AbstractCourse):
-    meta = {
-        'collection': 'courses-test'
-    }
-
-
 COURSE_DICT = {
     'MATH100': 'Differential Calculus with Applications to Physical Sciences and Engineering',
     'MATH101': 'Integral Calculus with Applications to Physical Sciences and Engineering',
@@ -17,20 +10,22 @@ COURSE_DICT = {
 }
 
 
-class TestDAO(unittest.TestCase):
+class TestDAOCourses(unittest.TestCase):
     def setUp(self):
         self.dao_wrapper = models.DAOWrapper(
             os.environ['DB_USER'],
             os.environ['DB_PASSWORD'],
             os.environ['DB_HOST'],
             os.environ['DB_PORT'],
-            CourseTest
+            models.CourseTest,
+            models.LogTest
         )
         # Assuming insert works properly
         models.insert_courses_from_dict(self.dao_wrapper, COURSE_DICT)
 
     def tearDown(self):
-        self.dao_wrapper.drop_collection(CourseTest)
+        self.dao_wrapper.drop_collection(models.CourseTest)
+        self.dao_wrapper.drop_collection(models.LogTest)
 
     def assert_is_sorted(self, container: list, ascending=False):
         if not container or len(container) == 1:
@@ -47,25 +42,30 @@ class TestDAO(unittest.TestCase):
 
     def test_get(self):
         code = 'MATH152'
-        c: models.AbstractCourse = self.dao_wrapper.get(code)
+        c: models.CourseAbstract = self.dao_wrapper.get_course(code)
         self.assertIsNotNone(c)
         self.assertEqual(c.name, COURSE_DICT.get(code))
 
-        self.assertIsNone(self.dao_wrapper.get('RAND999'))
+        self.assertIsNone(self.dao_wrapper.get_course('RAND999'))
+    
+    def test_get_courses(self):
+        codes = ['MATH100', 'MATH152']
+        courses: typing.List[models.CourseAbstract] = self.dao_wrapper.get_courses(codes)
+        self.assertEqual(len(courses),len(codes))
 
     def test_update_not_exist(self):
         code = 'MATH999'
         name = 'Test Math'
-        self.assertIsNone(self.dao_wrapper.get(code))
+        self.assertIsNone(self.dao_wrapper.get_course(code))
 
-        c: models.AbstractCourse = self.dao_wrapper.update_course(code, name)
+        c: models.CourseAbstract = self.dao_wrapper.update_course(code, name)
         self.assertIsNotNone(c)
         self.assertEqual(c.name, name)
 
     def test_update_exact_match(self):
         code = 'MATH152'
 
-        c: models.AbstractCourse = self.dao_wrapper.update_course(code, COURSE_DICT[code])
+        c: models.CourseAbstract = self.dao_wrapper.update_course(code, COURSE_DICT[code])
         self.assertIsNotNone(c)
         self.assertEqual(c.name, COURSE_DICT[code])
 
@@ -73,7 +73,7 @@ class TestDAO(unittest.TestCase):
         code = 'MATH152'
         name = 'Test1'
 
-        c: models.AbstractCourse = self.dao_wrapper.update_course(code, name)
+        c: models.CourseAbstract = self.dao_wrapper.update_course(code, name)
         self.assertIsNotNone(c)
         course_name_scores: typing.List[models.CourseNameScore] = c.course_name_scores
         # New suggested name
@@ -86,7 +86,7 @@ class TestDAO(unittest.TestCase):
         name = 'Test1'
 
         for i in range(0, models.SCORE_THRESHOLD):
-            c: models.AbstractCourse = self.dao_wrapper.update_course(code, name)
+            c: models.CourseAbstract = self.dao_wrapper.update_course(code, name)
             course_name_scores: typing.List[models.CourseNameScore] = c.course_name_scores
             # Length should not change
             self.assertEqual(len(course_name_scores), 1)
@@ -95,7 +95,7 @@ class TestDAO(unittest.TestCase):
 
         # Next update will make this name the default and pop it off the course
         # name list
-        c: models.AbstractCourse = self.dao_wrapper.update_course(code, name)
+        c: models.CourseAbstract = self.dao_wrapper.update_course(code, name)
         self.assertEqual(c.name, name)
         course_name_scores: typing.List[models.CourseNameScore] = c.course_name_scores
         self.assertEqual(len(course_name_scores), 0)
@@ -105,15 +105,15 @@ class TestDAO(unittest.TestCase):
 
         for i in range(0, models.MAX_NAME_COUNT):
             name = 'TestTitle' + str(i)
-            c: models.AbstractCourse = self.dao_wrapper.update_course(code, name)
+            c: models.CourseAbstract = self.dao_wrapper.update_course(code, name)
             course_name_scores: typing.List[models.CourseNameScore] = c.course_name_scores
             self.assertEqual(len(course_name_scores), i + 1)
 
         # Next name addition should pop the last name addition off since they
         # have the same popularity
         popped_name = name
-        name = 'TestTitle' + str(i + 1)
-        c: models.AbstractCourse = self.dao_wrapper.update_course(code, name)
+        name = 'TestTitle' + str(models.MAX_NAME_COUNT)
+        c: models.CourseAbstract = self.dao_wrapper.update_course(code, name)
         course_name_scores: typing.List[models.CourseNameScore] = c.course_name_scores
         self.assertEqual(len(course_name_scores),  models.MAX_NAME_COUNT)
         course_names = list(map(lambda cns: cns.name, course_name_scores))
@@ -130,12 +130,42 @@ class TestDAO(unittest.TestCase):
         for i in range(0, models.MAX_NAME_COUNT-1):
             add_name_n_times('Test' + str(i), i)
 
-        c: models.AbstractCourse = self.dao_wrapper.get(code)
-        print(c.course_name_scores)
+        c: models.CourseAbstract = self.dao_wrapper.get_course(code)
+
         self.assert_is_sorted(
             list(map(lambda cns: cns.score, c.course_name_scores))
         )
 
+class TestDAOLogs(unittest.TestCase):
+    def setUp(self):
+        self.dao_wrapper = models.DAOWrapper(
+            os.environ['DB_USER'],
+            os.environ['DB_PASSWORD'],
+            os.environ['DB_HOST'],
+            os.environ['DB_PORT'],
+            models.CourseTest,
+            models.LogTest
+        )
+        # Assuming insert works properly
+        models.insert_courses_from_dict(self.dao_wrapper, COURSE_DICT)
+
+    def tearDown(self):
+        self.dao_wrapper.drop_collection(models.CourseTest)
+        self.dao_wrapper.drop_collection(models.LogTest)
+    
+    def test_insert(self):
+        input_data =  {'MATH100': 'CALC1'}
+        input_path = '/courses'
+        input_hash = '1234'
+
+        self.dao_wrapper.insert_log(input_path, input_data, input_hash)
+        docObjects = self.dao_wrapper.generic_log.objects()
+        
+        self.assertEqual(len(docObjects), 1)
+        doc: models.LogAbstract = docObjects[0]
+        self.assertEqual(doc.path, input_path)
+        self.assertEqual(doc.hash_digest, input_hash)
+        self.assertEqual(doc.data, input_data)
 
 if __name__ == '__main__':
     unittest.main()

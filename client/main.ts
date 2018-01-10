@@ -28,7 +28,9 @@ interface UserChoice {
     removeStandingColumn: boolean;
 };
 
+
 const VERSION = '1.21';
+
 const VERSION_KEY = 'version_key';
 const DIGEST_KEY = 'digest_key';
 const SOURCE_URL = 'http://arashout.site/posts/improved-ubc-transcript';
@@ -47,6 +49,19 @@ const BIT_FLAGS = Object.freeze({
     KEEP_SECTION_COLUMN: 2, // 010
     KEEP_STANDING_COLUMN: 4, // 100
 })
+
+/**
+ * Function that checks whether the user needs to grab the latest ubcapi bookmarklet
+ * @param serverVersion 
+ */
+function isCompatibleVersion(serverVersion: string): boolean{
+    // Only compare major versions to determine if they compatitable
+    if(CLIENT_VERSION.charAt(0) !== serverVersion.charAt(0)){
+        return false;
+    }
+
+    return true;
+}
 
 // Replace the HTML space character thing with empty string
 function replaceNbsps(str: string): string {
@@ -154,7 +169,7 @@ for (let i = 0; i < courseList.length; i++) {
     const courseCode = courseList[i];
     queryString += `c${i}=${courseCode}&`;
 }
-queryString += `${VERSION_KEY}=${VERSION}&`
+queryString += `${VERSION_KEY}=${CLIENT_VERSION}&`
 
 // Create a unique digest for each user without (Avoid use of student number)
 const digest = hashFnv32a(courseList.join());
@@ -178,12 +193,12 @@ fetch(completeURL, {
         console.log(reason);
     })
     .then((courseMap: CourseMap) => {
-        if (courseMap[VERSION_KEY] !== VERSION) {
+        if ( !isCompatibleVersion(courseMap[VERSION_KEY]) ) {
             alert(`
         You do not have the latest version of the bookmarklet which means it may not
         work properly or you may be missing new features.\n
         Get the latest version from:\n${SOURCE_URL}\n\n
-        Version: ${VERSION}\tNewest Version: ${courseMap[VERSION_KEY]}
+        Version: ${CLIENT_VERSION}\tNewest Version: ${courseMap[VERSION_KEY]}
         `);
         }
 
