@@ -122,7 +122,7 @@ class TestDAO(unittest.TestCase):
         # Next name addition should pop the last name addition off since they
         # have the same popularity
         popped_name = name
-        name = 'TestTitle' + str(i + 1)
+        name = 'TestTitle' + str(models.MAX_NAME_COUNT)
         c: models.AbstractCourse = self.dao_wrapper.update_course(code, name)
         course_name_scores: typing.List[models.CourseNameScore] = c.course_name_scores
         self.assertEqual(len(course_name_scores),  models.MAX_NAME_COUNT)
