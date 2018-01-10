@@ -33,7 +33,7 @@ class CourseNameScore(me.EmbeddedDocument):
         return "{0} : {1}".format(self.name, self.score)
 
 
-class AbstractCourse(me.Document):
+class CourseAbstract(me.Document):
     code = me.StringField(primary_key=True)
     name = me.StringField(required=True)
     course_name_scores = me.ListField(
@@ -55,17 +55,23 @@ class AbstractCourse(me.Document):
     }
 
 
-class Course(AbstractCourse):
+class Course(CourseAbstract):
     meta = {
         'collection': 'courses-live'
     }
 
-class CourseDev(AbstractCourse):
+class CourseDev(CourseAbstract):
     meta = {
         'collection': 'courses-dev'
     }
 
-class AbstractLog(me.Document):
+
+class CourseTest(CourseAbstract):
+    meta = {
+        'collection': 'courses-test'
+    }
+
+class LogAbstract(me.Document):
     datestamp = me.StringField(required=True)
     path = me.StringField(required=True)
     hash_digest = me.StringField()
@@ -74,21 +80,26 @@ class AbstractLog(me.Document):
     # 2. edit -> course_code : suggested_name
     # 3. index visits
 
-    data = me.MapField(field=me.StringField())
+    data = me.DictField()
 
     meta = {
         'allow_inheritance': True,
         'abstract': True
     }
 
-class Log(AbstractLog):
+class Log(LogAbstract):
     meta = {
         'collection': 'logs-live'
     }
 
-class LogDev(AbstractLog):
+class LogDev(LogAbstract):
     meta = {
         'collection': 'log-dev'
+    }
+
+class LogTest(LogAbstract):
+    meta = {
+        'collection': 'logs-test'
     }
 
 class DAOWrapper:
@@ -106,21 +117,21 @@ class DAOWrapper:
         self.generic_course = generic_course
         self.generic_log = generic_log
 
-    def insert_courses(self, courses: typing.List[AbstractCourse]):
+    def insert_courses(self, courses: typing.List[CourseAbstract]):
         try:
             self.generic_course.objects.insert(courses, write_concern={'continue_on_error': True})
         except me.NotUniqueError:
             pass
 
-    def insert_course(self, course: AbstractCourse) -> AbstractCourse:
+    def insert_course(self, course: CourseAbstract) -> CourseAbstract:
         try:
             return course.save()
         except me.NotUniqueError:
             return None
 
     # TODO: Way too much logic in this method. 
-    def update_course(self, _code: str, _name: str) -> AbstractCourse:
-        c: AbstractCourse = self.get_course(_code)
+    def update_course(self, _code: str, _name: str) -> CourseAbstract:
+        c: CourseAbstract = self.get_course(_code)
         # If the course does not exist in the DB at all
         if c is None:
             c = self.generic_course(code=_code, name=_name)
@@ -158,10 +169,10 @@ class DAOWrapper:
         except me.DoesNotExist:
             return None
 
-    def get_courses(self, course_codes: typing.List[str]) -> typing.List[AbstractCourse]:
+    def get_courses(self, course_codes: typing.List[str]) -> typing.List[CourseAbstract]:
         return list(self.generic_course.objects(pk__in=course_codes))
 
-    def insert_log(self, _path: str, _data = None, hash_digest = None) -> AbstractLog:
+    def insert_log(self, _path: str, _data = None, hash_digest = None) -> LogAbstract:
         try:
             log = self.generic_log()
             now = datetime.datetime.now()

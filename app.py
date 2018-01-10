@@ -89,8 +89,10 @@ def get_courses():
 
     for course in courses:
         response_dict[course.code] = course.name
-        log_dict[course.code] = course.name
-    
+
+    for code in course_codes:
+        log_dict[code] = response_dict.get(code, None)
+
     log_dict['METHOD'] = request.method
 
     dao_wrapper.insert_log(request.path, log_dict, hash_digest)
