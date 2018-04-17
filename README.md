@@ -33,8 +33,13 @@ This is what the transcript looked like before
 This application is split into 2 parts the [the bookmarklet](#Bookmarklet) and [the server](#The Server)
 
 ### Bookmarklet
+- The bookmarklet is JavaScript code that runs on the user's browser to:
+1. Prompts the user for input regarding what features to remove
+2. Formats the page by removing unnecessary features
+3. Makes a call to the server 
 
 ### The Server
+
 
 ## Credits:
 - [crclayton](https://github.com/crclayton) originally created the bookmarklet that formatted the transcript, I'm simply building off of it.
