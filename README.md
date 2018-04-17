@@ -1,4 +1,4 @@
-# UBC API
+# UBC API [![Build Status](https://travis-ci.org/arashout/ubcapi.svg?branch=master)](https://travis-ci.org/arashout/ubcapi)
 ## What it does:
 Beautifies the lacking unofficial UBC transcript with extra information and better formatting.
 
