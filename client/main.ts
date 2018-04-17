@@ -29,7 +29,7 @@ interface UserChoice {
 };
 
 
-const VERSION = '1.21';
+const CLIENT_VERSION = '1.3';
 
 const VERSION_KEY = 'version_key';
 const DIGEST_KEY = 'digest_key';

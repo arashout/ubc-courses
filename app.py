@@ -104,7 +104,6 @@ def get_courses():
 @app.route('/')
 def index():
     dao_wrapper.insert_log(request.path)
-
     return render_template('index.html', version=VERSION, api_status=API_STATUS, api_url=API_URL)
 
 
