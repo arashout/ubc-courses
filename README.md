@@ -36,7 +36,8 @@ This application is split into 2 parts the [the bookmarklet](#Bookmarklet) and [
 - The bookmarklet is JavaScript code that runs on the user's browser to:
 1. Prompts the user for input regarding what features to remove
 2. Formats the page by removing unnecessary features
-3. Makes a call to the server 
+3. Makes a call to the server to retrieve course names for courses on the grades page
+4. Populates the new column called 'Course Names'
 
 ### The Server
 
