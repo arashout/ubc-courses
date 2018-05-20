@@ -36,6 +36,8 @@ const DIGEST_KEY = 'digest_key';
 const SOURCE_URL = 'http://arashout.site/posts/improved-ubc-transcript';
 const API_URL = 'https://ubc-api.herokuapp.com';
 
+const INITIAL_TEXT_ATTRIBUTE = 'data-initial-text';
+
 const COL_INDEX_RETRIEVAL = Object.freeze({
     COURSE_CODE: 0,
     LETTER_GRADE: 3,
@@ -54,9 +56,9 @@ const BIT_FLAGS = Object.freeze({
  * Function that checks whether the user needs to grab the latest ubcapi bookmarklet
  * @param serverVersion 
  */
-function isCompatibleVersion(serverVersion: string): boolean{
+function isCompatibleVersion(serverVersion: string): boolean {
     // Only compare major versions to determine if they compatitable
-    if(CLIENT_VERSION.charAt(0) !== serverVersion.charAt(0)){
+    if (CLIENT_VERSION.charAt(0) !== serverVersion.charAt(0)) {
         return false;
     }
 
@@ -175,9 +177,14 @@ queryString += `${VERSION_KEY}=${CLIENT_VERSION}&`
 const digest = hashFnv32a(courseList.join());
 queryString += `${DIGEST_KEY}=${digest}`;
 
-const coursesPath = '/courses'
+const coursesPath = '/courses';
+const courseNameEditPath = '/courses/edit';
 const completeURL = API_URL + coursesPath + '?' + queryString;
 
+const editedCoursesMap = new Map<string, string>();
+
+// NOTE: We use a GET request because we are not allowed to send POST from this page (security reasons)
+// It is basically a hack...
 fetch(completeURL, {
     method: 'GET',
     headers: {
@@ -193,7 +200,7 @@ fetch(completeURL, {
         console.log(reason);
     })
     .then((courseMap: CourseMap) => {
-        if ( !isCompatibleVersion(courseMap[VERSION_KEY]) ) {
+        if (!isCompatibleVersion(courseMap[VERSION_KEY])) {
             alert(`
         You do not have the latest version of the bookmarklet which means it may not
         work properly or you may be missing new features.\n
@@ -206,5 +213,17 @@ fetch(completeURL, {
             const cellCourseName = <HTMLTableCellElement>iframe.getElementById(courseCode);
             cellCourseName.contentEditable = 'true';
             cellCourseName.innerText = courseMap[courseCode];
+            // 'change' event listener does not work with normal divs with contentEditable
+            // Below is a hack to get the similar behavior
+            cellCourseName.setAttribute(INITIAL_TEXT_ATTRIBUTE, cellCourseName.innerText);
+            cellCourseName.addEventListener('blur', () => {
+                if(cellCourseName.getAttribute(INITIAL_TEXT_ATTRIBUTE) !== cellCourseName.innerText){
+                    editedCoursesMap.set(cellCourseName.id, cellCourseName.innerText);
+                    console.log(cellCourseName.innerText);
+                    console.log(editedCoursesMap);
+                }
+            });
         });
     });
+
+// TODO: Send edit courses event if map is not empty and print button is pressed
