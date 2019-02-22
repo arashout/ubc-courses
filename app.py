@@ -94,7 +94,7 @@ def suggestCourses():
     dao_wrapper.insert_log(request.path, log_dict, hash_digest)
 
    
-    return None
+    return jsonify({"success": True})
 
 @app.route("/")
 def index():
