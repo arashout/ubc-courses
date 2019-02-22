@@ -31,24 +31,28 @@ API_URL = "https://ubc-api.herokuapp.com"
 DIGEST_KEY = "digest_key"
 
 
+def getCourseParams(args: typing.Dict[str, str]) -> typing.Dict[str, str]:
+    courseParams = {}
+    for key, value in args.items():
+        if pattern_course.match(key) is not None:
+            courseParams[key] = value
+
+    return courseParams
+
+
 @app.route("/courses", methods=["GET"])
 def get_courses():
-    def getCleanQueryParams(args: typing.Dict[str, str]) -> typing.Dict[str, str]:
-        def isCourseQueryParam(param_key: str) -> bool:
-            if pattern_course.match(param_key) is not None:
-                return True
-            return False
-
-        cleanedQueryParams = {}
-        for key, value in args.items():
-            if isCourseQueryParam(key):
-                cleanedQueryParams[key] = value
-
-        return cleanedQueryParams
-
     all_args: dict = request.args.to_dict()
 
     response_dict = {}
+
+    course_codes = list(getCourseParams(all_args).values())
+    courses = dao_wrapper.get_courses(course_codes)
+
+    for course in courses:
+        response_dict[course.code] = course.name
+
+    # Do some logging
     log_dict = {}
 
     # TODO: Use this to prevent many requests
@@ -56,12 +60,6 @@ def get_courses():
     if DIGEST_KEY in all_args:
         hash_digest = all_args[DIGEST_KEY]
         log_dict[DIGEST_KEY] = hash_digest
-
-    course_codes = list(getCleanQueryParams(all_args).values())
-    courses = dao_wrapper.get_courses(course_codes)
-
-    for course in courses:
-        response_dict[course.code] = course.name
 
     for code in course_codes:
         log_dict[code] = response_dict.get(code, None)
@@ -72,6 +70,10 @@ def get_courses():
 
     return jsonify(response_dict)
 
+# This should really be a POST request but I don't think I'm allowed to send those because of CORS
+@app.route("/courses/suggest", methods=["GET"])
+def suggestCourses():
+    return None
 
 @app.route("/")
 def index():

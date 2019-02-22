@@ -30,11 +30,7 @@
     };
 
 
-    const CLIENT_VERSION = '1.3';
-
-    const VERSION_KEY = 'version_key';
     const DIGEST_KEY = 'digest_key';
-    const SOURCE_URL = 'http://arashout.site/posts/improved-ubc-transcript';
     const API_URL = 'https://ubc-api.herokuapp.com';
 
     const INITIAL_TEXT_ATTRIBUTE = 'data-initial-text';
@@ -52,19 +48,6 @@
         KEEP_SECTION_COLUMN: 2, // 010
         KEEP_STANDING_COLUMN: 4, // 100
     })
-
-    /**
-     * Function that checks whether the user needs to grab the latest ubcapi bookmarklet
-     * @param serverVersion 
-     */
-    function isCompatibleVersion(serverVersion: string): boolean {
-        // Only compare major versions to determine if they compatitable
-        if (CLIENT_VERSION.charAt(0) !== serverVersion.charAt(0)) {
-            return false;
-        }
-
-        return true;
-    }
 
     // Replace the HTML space character thing with empty string
     function replaceWhitespace(str: string): string {
@@ -172,7 +155,6 @@
         const courseCode = courseList[i];
         queryString += `c${i}=${courseCode}&`;
     }
-    queryString += `${VERSION_KEY}=${CLIENT_VERSION}&`
 
     // Create a unique digest for each user without (Avoid use of student number)
     const digest = hashFnv32a(courseList.join());
@@ -201,15 +183,6 @@
             console.log(reason);
         })
         .then((courseMap: CourseMap) => {
-            if (!isCompatibleVersion(courseMap[VERSION_KEY])) {
-                alert(`
-        You do not have the latest version of the bookmarklet which means it may not
-        work properly or you may be missing new features.\n
-        Get the latest version from:\n${SOURCE_URL}\n\n
-        Version: ${CLIENT_VERSION}\tNewest Version: ${courseMap[VERSION_KEY]}
-        `);
-            }
-
             courseList.forEach((courseCode: string) => {
                 console.assert(courseCode === replaceWhitespace(courseCode));
                 courseCode = replaceWhitespace(courseCode);
@@ -230,4 +203,24 @@
         });
 
     // TODO: Send edit courses event if map is not empty and print button is pressed
+    const printButton = iframe.getElementById('printer');
+    console.assert(printButton);
+    printButton.addEventListener('click', () => {
+        let suggestQueryString = '';
+        editedCoursesMap.forEach((v, k) => {
+            suggestQueryString += `${k}=${v}&`
+        });
+        fetch(`${API_URL}/courses/suggest?${suggestQueryString}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors'
+        })
+        .then( () => console.log(suggestQueryString))
+        .catch( (r) => console.error(r));
+    })
+
+
 })();
