@@ -4,55 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/index.css') }}">
     <title>UBC Transcript Beautifier And API</title>
 </head>
 
 <body>
-    <h1>Bookmarklet</h1>
-    <p>Last updated: {{DATETIME}}</p>
-    <!-- JAVASCRIPT_SOURCE will get replace by contents of bookmarklet.js by build script-->
-    <a href="{{JAVASCRIPT_SOURCE}}">UBCTranscript-{{DATE}}</a>
+    <div class="container">
+        <h1 class="is-size-1">Bookmarklet</h1>
+        <p>Last updated: {{DATETIME}}</p>
+        <!-- JAVASCRIPT_SOURCE will get replace by contents of bookmarklet.js by build script-->
+        <a href="{{JAVASCRIPT_SOURCE}}">UBCTranscript-{{DATETIME}}</a>
 
-    
-    <h1>API</h1>
-    <h3 class="green">Current Status: {{ api_status }} </h3>
-    <h3>Version: {{ version }}</h3>
-    <div>
-        <h4>Commands:</h4>
-        <p>Base URL: <a href="{{ api_url }}">{{ api_url }}</a></p>
-        <table style="width:100%">
-            <tr>
-                <th>METHOD</th>
-                <th>COMMAND</th>
-                <th>PARAMETERS</th>
-                <th>RESPONSE</th>
-            </tr>
-            <tr>
-                <td>GET</td>
-                <td>/course/
-                    <strong>course_code</strong>
-                </td>
-                <td>course_code : string
-                    <br> e.g. MATH 307 </td>
-                <td>course_object : {'code', 'name'}
-                    <br> e.g. {'code' : 'MATH 307', 'name' : 'Applied Linear Algebra'}</td>
-            </tr>
-            <tr>
-                <td>GET</td>
-                <td>/courses?c0=
-                    <strong>course_code0</strong>&#38;c1=
-                    <strong>course_code1</strong> (...)</td>
-                <td>course_code : string
-                    <br> e.g. MATH 307 </td>
-                <td>course_object array : {'code', 'name'}[]
-                    <br> e.g. [ {'code' : 'MATH 307', 'name' : 'Applied Linear Algebra'}, {'code' : 'PHYS 170', 'name'
-                    : 'Mechanics
-                    I'}, ]
-                </td>
-            </tr>
-        </table>
+        <h1 class="is-size-1">API</h1>
+        <div>
+            <h4 class="is-size-4">Commands:</h4>
+            <p>Base URL: <a href="{{ api_url }}">{{ api_url }}</a></p>
+            <table class="table" style="width:100%">
+                <tr>
+                    <th>METHOD</th>
+                    <th>COMMAND</th>
+                    <th>PARAMETERS</th>
+                    <th>RESPONSE</th>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td>/courses?c0=
+                        <strong>course_code0</strong>&#38;c1=
+                        <strong>course_code1</strong> (...)</td>
+                    <td>course_code : string
+                        <br> e.g. MATH 307 </td>
+                    <td>course_object array : {'code', 'name'}[]
+                        <br> e.g. [ {'code' : 'MATH 307', 'name' : 'Applied Linear Algebra'}, {'code' : 'PHYS 170',
+                        'name'
+                        : 'Mechanics
+                        I'}, ]
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
+
 </body>
 
 </html>
