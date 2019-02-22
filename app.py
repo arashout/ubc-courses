@@ -26,7 +26,7 @@ else:
         os.environ["DB_PORT"],
     )
 
-pattern_get_course = re.compile(r"c\d+")
+PATTERN_GET_COURSE_CODE = re.compile(r"c\d+")
 
 API_URL = "https://ubc-api.herokuapp.com"
 DIGEST_KEY = "digest_key"
@@ -35,7 +35,7 @@ DIGEST_KEY = "digest_key"
 def getCourseParams(args: typing.Dict[str, str]) -> typing.Dict[str, str]:
     courseParams = {}
     for key, value in args.items():
-        if pattern_get_course.match(key) is not None:
+        if PATTERN_GET_COURSE_CODE.match(key) is not None:
             courseParams[key] = value
 
     return courseParams
@@ -66,23 +66,13 @@ def suggestCourses():
     for code in course_codes:
         suggested_name = all_args.get(code, None)
         if suggested_name is not None:
-            c = dao_wrapper.update_course(code, suggested_name)
-            response_dict[code] = str(c)
+            course = dao_wrapper.upsert_course(code, suggested_name)
+            # TODO: Maybe change this response
+            response_dict[code] = str(course)
         else:
             response_dict[code] = None
     
-    # TODO: Use this to prevent many requests
-    log_dict = response_dict.copy()
-    hash_digest = "NA"
-    if DIGEST_KEY in all_args:
-        hash_digest = all_args[DIGEST_KEY]
-        log_dict[DIGEST_KEY] = hash_digest
-
-    for code in course_codes:
-        log_dict[code] = all_args.get(code, None)
-
-    log_dict["METHOD"] = request.method
-    dao_wrapper.insert_log(request.path, log_dict, hash_digest)
+    dao_wrapper.insert_log(request.path, response_dict.copy(), all_args.get(DIGEST_KEY, None))
    
     return jsonify(response_dict)
 
