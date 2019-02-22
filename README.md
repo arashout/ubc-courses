@@ -22,12 +22,12 @@ It does this in several ways:
 
 The code gets rid of the extra tabs/average calculator app, spaces things out a little better, and aligns the table to the header. 
 
-![After Transcript Example](.examples/After.png "After Transcript Example")
+![After Transcript Example](./examples/After.png "After Transcript Example")
 
 ## Before Picture
 
 This is what the transcript looked like before
-![Before Transcript Example](.examples/Before.png "Before Transcript Example")
+![Before Transcript Example](./examples/Before.png "Before Transcript Example")
 
 ## How it works:
 This application is split into 2 parts the [the bookmarklet](#Bookmarklet) and [the server](#The Server)
