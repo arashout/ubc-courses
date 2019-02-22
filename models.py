@@ -11,7 +11,7 @@ PATH_JSON_COURSES = os.path.join(CURRENT_DIRECTORY, "data", "courses.json")
 DB_NAME = "ubcapi"
 
 DATE_FORMAT = r"%Y%m%d"
-SCORE_THRESHOLD = 90
+SCORE_THRESHOLD = 10
 MAX_NAME_COUNT = 10
 
 
@@ -124,6 +124,9 @@ class DAOWrapper:
 
     # TODO: Way too much logic in this method.
     def update_course(self, _code: str, _name: str) -> CourseAbstract:
+        # Make sure we have no trailing spaces
+        _code = _code.strip()
+        
         c: typing.Optional[CourseAbstract] = self.get_course(_code)
         # If the course does not exist in the DB at all
         if c is None:
@@ -176,11 +179,8 @@ class DAOWrapper:
             now = datetime.datetime.now()
             log.datestamp = now.strftime(DATE_FORMAT)
             log.path = _path
-
-            if hash_digest is not None:
-                log.hash_digest = hash_digest
-            if _data is not None:
-                log.data = _data
+            log.hash_digest = hash_digest
+            log.data = _data
 
             return log.save()
 

@@ -17,6 +17,7 @@ if os.environ.get("DEV") is not None:
         models.CourseDev,
         models.LogDev,
     )
+    print("DEV environment variable detected! Running in development mode")
 else:
     dao_wrapper = models.DAOWrapper(
         os.environ["DB_USER"],
@@ -25,7 +26,7 @@ else:
         os.environ["DB_PORT"],
     )
 
-pattern_course = re.compile(r"c\d+")
+pattern_get_course = re.compile(r"c\d+")
 
 API_URL = "https://ubc-api.herokuapp.com"
 DIGEST_KEY = "digest_key"
@@ -34,7 +35,7 @@ DIGEST_KEY = "digest_key"
 def getCourseParams(args: typing.Dict[str, str]) -> typing.Dict[str, str]:
     courseParams = {}
     for key, value in args.items():
-        if pattern_course.match(key) is not None:
+        if pattern_get_course.match(key) is not None:
             courseParams[key] = value
 
     return courseParams
@@ -52,21 +53,7 @@ def get_courses():
     for course in courses:
         response_dict[course.code] = course.name
 
-    # Do some logging
-    log_dict = {}
-
-    # TODO: Use this to prevent many requests
-    hash_digest = "NA"
-    if DIGEST_KEY in all_args:
-        hash_digest = all_args[DIGEST_KEY]
-        log_dict[DIGEST_KEY] = hash_digest
-
-    for code in course_codes:
-        log_dict[code] = response_dict.get(code, None)
-
-    log_dict["METHOD"] = request.method
-
-    dao_wrapper.insert_log(request.path, log_dict, hash_digest)
+    dao_wrapper.insert_log(request.path, response_dict.copy(), all_args.get(DIGEST_KEY, None))
 
     return jsonify(response_dict)
 
@@ -74,7 +61,7 @@ def get_courses():
 @app.route("/courses/suggest", methods=["GET"])
 def suggestCourses():
     all_args: dict = request.args.to_dict()
-    course_codes = list(getCourseParams(all_args).values())
+    course_codes = list(all_args.keys())
     response_dict = {}
     for code in course_codes:
         suggested_name = all_args.get(code, None)
