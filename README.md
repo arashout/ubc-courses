@@ -22,12 +22,12 @@ It does this in several ways:
 
 The code gets rid of the extra tabs/average calculator app, spaces things out a little better, and aligns the table to the header. 
 
-![After Transcript Example](./After.png "After Transcript Example")
+![After Transcript Example](.examples/After.png "After Transcript Example")
 
 ## Before Picture
 
 This is what the transcript looked like before
-![Before Transcript Example](./Before.png "Before Transcript Example")
+![Before Transcript Example](.examples/Before.png "Before Transcript Example")
 
 ## How it works:
 This application is split into 2 parts the [the bookmarklet](#Bookmarklet) and [the server](#The Server)
@@ -36,11 +36,11 @@ This application is split into 2 parts the [the bookmarklet](#Bookmarklet) and [
 - The bookmarklet is JavaScript code that runs on the user's browser to:
 1. Prompts the user for input regarding what features to remove
 2. Formats the page by removing unnecessary features
-3. Makes a call to the server to retrieve course names for courses on the grades page
+3. Make an GET request to the server to retrieve course names for the course codes on the grades page
 4. Populates the new column called 'Course Names'
 
 ### The Server
-
+1. Respond to GET requests from client
 
 ## Credits:
 - [crclayton](https://github.com/crclayton) originally created the bookmarklet that formatted the transcript, I'm simply building off of it.
