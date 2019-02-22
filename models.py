@@ -11,7 +11,7 @@ PATH_JSON_COURSES = os.path.join(CURRENT_DIRECTORY, 'data', 'courses.json')
 DB_NAME = 'ubcapi'
 
 DATE_FORMAT = r'%Y%m%d'
-SCORE_THRESHOLD = 4
+SCORE_THRESHOLD = 90
 MAX_NAME_COUNT = 10
 
 

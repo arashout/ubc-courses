@@ -73,6 +73,27 @@ def get_courses():
 # This should really be a POST request but I don't think I'm allowed to send those because of CORS
 @app.route("/courses/suggest", methods=["GET"])
 def suggestCourses():
+    all_args: dict = request.all_args.to_dict()
+    course_codes = list(getCourseParams(all_args).values())
+    for code in course_codes:
+        suggested_name = all_args.get(code, None)
+        if suggested_name is not None:
+            dao_wrapper.update_course(code, suggested_name)
+    
+    # TODO: Use this to prevent many requests
+    log_dict = {}
+    hash_digest = "NA"
+    if DIGEST_KEY in all_args:
+        hash_digest = all_args[DIGEST_KEY]
+        log_dict[DIGEST_KEY] = hash_digest
+
+    for code in course_codes:
+        log_dict[code] = all_args.get(code, None)
+
+    log_dict["METHOD"] = request.method
+    dao_wrapper.insert_log(request.path, log_dict, hash_digest)
+
+   
     return None
 
 @app.route("/")
