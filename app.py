@@ -75,13 +75,17 @@ def get_courses():
 def suggestCourses():
     all_args: dict = request.args.to_dict()
     course_codes = list(getCourseParams(all_args).values())
+    response_dict = {}
     for code in course_codes:
         suggested_name = all_args.get(code, None)
         if suggested_name is not None:
-            dao_wrapper.update_course(code, suggested_name)
+            c = dao_wrapper.update_course(code, suggested_name)
+            response_dict[code] = str(c)
+        else:
+            response_dict[code] = None
     
     # TODO: Use this to prevent many requests
-    log_dict = {}
+    log_dict = response_dict.copy()
     hash_digest = "NA"
     if DIGEST_KEY in all_args:
         hash_digest = all_args[DIGEST_KEY]
@@ -92,9 +96,8 @@ def suggestCourses():
 
     log_dict["METHOD"] = request.method
     dao_wrapper.insert_log(request.path, log_dict, hash_digest)
-
    
-    return jsonify({"success": True})
+    return jsonify(response_dict)
 
 @app.route("/")
 def index():
