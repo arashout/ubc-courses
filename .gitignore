@@ -1,12 +1,10 @@
-# Transpiled javascript
-*.js
-
 # Debug
 debug
 ubcapi
 
 # Python
 *.pyc
+.mypy_cache
 
 # VSCODE
 .vscode/
@@ -16,3 +14,7 @@ ubcapi
 
 # Pycache
 __pycache__
+
+# Javascript
+client_build/
+node_modules/

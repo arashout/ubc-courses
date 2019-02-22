@@ -13,11 +13,13 @@ python_full_version = "3.6.3"
 [packages]
 
 mongoengine = "==0.15.0"
-Flask = "==0.12.2"
-Flask-SSLify = "==0.1.5"
+flask = "==0.12.2"
+flask-sslify = "==0.1.5"
 typing = "==3.6.2"
 gunicorn = "*"
 
 
 [dev-packages]
 
+black = "*"
+mypy = "*"
