@@ -73,7 +73,7 @@ def get_courses():
 # This should really be a POST request but I don't think I'm allowed to send those because of CORS
 @app.route("/courses/suggest", methods=["GET"])
 def suggestCourses():
-    all_args: dict = request.all_args.to_dict()
+    all_args: dict = request.args.to_dict()
     course_codes = list(getCourseParams(all_args).values())
     for code in course_codes:
         suggested_name = all_args.get(code, None)
@@ -98,7 +98,6 @@ def suggestCourses():
 
 @app.route("/")
 def index():
-    dao_wrapper.insert_log(request.path)
     return render_template("index.html", api_url=API_URL)
 
 
