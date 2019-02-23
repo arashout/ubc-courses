@@ -195,8 +195,6 @@
                 cellCourseName.addEventListener('blur', () => {
                     if (cellCourseName.getAttribute(INITIAL_TEXT_ATTRIBUTE) !== cellCourseName.innerText) {
                         editedCoursesMap.set(cellCourseName.id, cellCourseName.innerText);
-                        console.log(cellCourseName.innerText);
-                        console.log(editedCoursesMap);
                     }
                 });
             });
@@ -206,20 +204,22 @@
     const printButton = iframe.getElementById('printer');
     console.assert(printButton);
     printButton.addEventListener('click', () => {
-        let suggestQueryString = '';
-        editedCoursesMap.forEach((v, k) => {
-            suggestQueryString += `${k}=${v}&`
-        });
-        fetch(`${API_URL}/courses/suggest?${suggestQueryString}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json'
-            },
-            mode: 'cors'
-        })
-        .then( () => console.log(suggestQueryString))
-        .catch( (r) => console.error(r));
+        if(editedCoursesMap.size > 0){
+            let suggestQueryString = '';
+            editedCoursesMap.forEach((v, k) => {
+                suggestQueryString += `${k}=${v}&`
+            });
+            fetch(`${API_URL}/courses/suggest?${suggestQueryString}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors'
+            })
+            .then( () => console.log(suggestQueryString))
+            .catch( (r) => console.error(r));
+        }
     })
 
 
