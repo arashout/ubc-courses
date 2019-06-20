@@ -31,8 +31,7 @@
 
 
     const DIGEST_KEY = 'digest_key';
-    const API_URL = process.env["UBCAPI_URL"];
-
+    const API_URL = 'https://4zgnt7uxt4.execute-api.us-west-2.amazonaws.com/dev';
     const INITIAL_TEXT_ATTRIBUTE = 'data-initial-text';
 
     const COL_INDEX_RETRIEVAL = Object.freeze({
