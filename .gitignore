@@ -9,8 +9,9 @@ ubcapi
 # VSCODE
 .vscode/
 
-# Heroku
+# Deply 
 .env
+.serverless
 
 # Pycache
 __pycache__

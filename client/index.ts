@@ -31,7 +31,7 @@
 
 
     const DIGEST_KEY = 'digest_key';
-    const API_URL = 'https://ubc-api.herokuapp.com';
+    const API_URL = process.env["UBCAPI_URL"];
 
     const INITIAL_TEXT_ATTRIBUTE = 'data-initial-text';
 
@@ -202,7 +202,7 @@
 
     // TODO: Send edit courses event if map is not empty and print button is pressed
     const printButton = iframe.getElementById('printer');
-    console.assert(printButton);
+    console.assert(!!printButton);
     printButton.addEventListener('click', () => {
         if(editedCoursesMap.size > 0){
             let suggestQueryString = '';

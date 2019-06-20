@@ -28,7 +28,7 @@ else:
 
 PATTERN_GET_COURSE_CODE = re.compile(r"c\d+")
 
-API_URL = "https://ubc-api.herokuapp.com"
+API_URL = os.environ["UBCAPI_URL"] 
 DIGEST_KEY = "digest_key"
 
 

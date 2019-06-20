@@ -9,11 +9,24 @@ help:
  setup:	
 	pip3 install pipenv	
 	# Use python3 for the enviroment	
-	pipenv install --dev --python=3.6	
+	pipenv install --dev --python=3.6
 
+	# Install NPM packages
+	npm install -g typescript
+	npm install -g serverless
+	npm install
+
+	# Install 
+	sls plugin install -n serverless-wsgi
+	sls plugin install -n serverless-python-requirements
+ build_client:
+	./scripts/build.sh
+ local_deploy:
+	sls wsgi serve
+ deploy:
+	sls deploy
  activate:	
-	pipenv shell -c	
-
+	pipenv shell
  test:	
 	pipenv run python3 test_models.py	
 

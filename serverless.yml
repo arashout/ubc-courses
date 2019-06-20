@@ -1,0 +1,30 @@
+service: ubcapi
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: dev
+  region: us-west-2
+  memorySize: 128
+
+plugins:
+  - serverless-wsgi
+  - serverless-python-requirements
+
+custom:
+  wsgi:
+    app: app.app
+    packRequirements: false
+
+functions:
+  app:
+    handler: wsgi_handler.handler
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
+    environment:
+      UBCAPI_URL: ${env:UBCAPI_URL}
+      DB_USER: ${env:DB_USER}
+      DB_PASSWORD: ${env:DB_PASSWORD}
+      DB_HOST: ${env:DB_HOST}
+      DB_PORT: ${env:DB_PORT}
