@@ -84,7 +84,7 @@ def index():
 @app.after_request
 def apply_caching(response):
     """Response headers added for CORS protection"""
-    response.headers["Access-Control-Allow-Origin"] = "https://ssc.adm.ubc.ca"
+    response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Methods"] = "GET"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     return response
