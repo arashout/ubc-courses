@@ -3,7 +3,8 @@ help:
 	@echo "    make help        show this message"	
 	@echo "    make setup       create virtual environment and install dependencies"	
 	@echo "    make activate    enter virtual environment"	
-	@echo "    make test        run the test suite"	
+	@echo "    make test        run the test suite"
+	@echo "    make build_client bookmarkletify the typescript code"	
 	@echo "    exit             leave virtual environment"	
 
  setup:	
@@ -24,6 +25,7 @@ help:
  local_deploy:
 	sls wsgi serve
  deploy:
+	./scripts/build.sh
 	sls deploy
  activate:	
 	pipenv shell
