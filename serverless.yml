@@ -3,7 +3,7 @@ service: ubcapi
 provider:
   name: aws
   runtime: python3.6
-  stage: dev
+  stage: prod
   region: us-west-2
   memorySize: 128
 

@@ -9,7 +9,7 @@ ubcapi
 # VSCODE
 .vscode/
 
-# Deply 
+# Deploy 
 .env
 .serverless
 
