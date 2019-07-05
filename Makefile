@@ -23,8 +23,10 @@ help:
  build_client:
 	./scripts/build.sh
  local_deploy:
+ 	source ~/.bashrc
 	sls wsgi serve
  deploy:
+	source ~/.bashrc
 	./scripts/build.sh
 	sls deploy
  activate:	
