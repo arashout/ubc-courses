@@ -14,13 +14,12 @@ if os.environ.get("DEV") is not None:
         os.environ["DB_PASSWORD"],
         os.environ["DB_HOST"],
         os.environ["DB_PORT"],
-        "dev"
+        "dev",
         models.CourseDev,
         models.LogDev,
     )
     print("DEV environment variable detected! Running in development mode")
 else:
-    env = os.environ.get()
     dao_wrapper = models.DAOWrapper(
         os.environ["DB_USER"],
         os.environ["DB_PASSWORD"],
