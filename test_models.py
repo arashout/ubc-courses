@@ -17,6 +17,7 @@ class TestDAOCourses(unittest.TestCase):
             os.environ['DB_PASSWORD'],
             os.environ['DB_HOST'],
             os.environ['DB_PORT'],
+            "test",
             models.CourseTest,
             models.LogTest
         )
@@ -84,7 +85,7 @@ class TestDAOCourses(unittest.TestCase):
     def test_update_new_name_scoring(self):
         code = 'MATH152'
         name = 'Test1'
-
+        
         for i in range(0, models.SCORE_THRESHOLD):
             c: models.CourseAbstract = self.dao_wrapper.upsert_course(code, name)
             course_name_scores: List[models.CourseNameScore] = c.course_name_scores
@@ -95,10 +96,10 @@ class TestDAOCourses(unittest.TestCase):
 
         # Next update will make this name the default and pop it off the course
         # name list
-        # course: models.CourseAbstract = self.dao_wrapper.upsert_course(code, name)
-        # self.assertEqual(c.name, name)
-        # course_name_scores: List[models.CourseNameScore] = course.course_name_scores
-        # self.assertEqual(len(course_name_scores), 0)
+        course: models.CourseAbstract = self.dao_wrapper.upsert_course(code, name)
+        self.assertEqual(course.name, name)
+        course_name_scores: List[models.CourseNameScore] = course.course_name_scores
+        self.assertEqual(len(course_name_scores), 0)
 
     def test_too_many_names(self):
         code = 'MATH152'
@@ -158,6 +159,7 @@ class TestDAOLogs(unittest.TestCase):
             os.environ['DB_PASSWORD'],
             os.environ['DB_HOST'],
             os.environ['DB_PORT'],
+            "test",
             models.CourseTest,
             models.LogTest
         )

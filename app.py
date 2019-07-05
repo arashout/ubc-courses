@@ -14,16 +14,19 @@ if os.environ.get("DEV") is not None:
         os.environ["DB_PASSWORD"],
         os.environ["DB_HOST"],
         os.environ["DB_PORT"],
+        "dev"
         models.CourseDev,
         models.LogDev,
     )
     print("DEV environment variable detected! Running in development mode")
 else:
+    env = os.environ.get()
     dao_wrapper = models.DAOWrapper(
         os.environ["DB_USER"],
         os.environ["DB_PASSWORD"],
         os.environ["DB_HOST"],
         os.environ["DB_PORT"],
+        os.environ.get("ENV", "heroku")
     )
 
 PATTERN_GET_COURSE_CODE = re.compile(r"c\d+")
@@ -57,7 +60,7 @@ def get_courses():
 
     return jsonify(response_dict)
 
-# This should really be a POST request but I don't think I'm allowed to send those because of CORS
+# This should be a post request, but I'm not sure if it's allowed due to security on UBCs site 
 @app.route("/courses/suggest", methods=["GET"])
 def suggestCourses():
     all_args: dict = request.args.to_dict()
@@ -67,7 +70,6 @@ def suggestCourses():
         suggested_name = all_args.get(code, None)
         if suggested_name is not None:
             course = dao_wrapper.upsert_course(code, suggested_name)
-            # TODO: Maybe change this response
             response_dict[code] = str(course)
         else:
             response_dict[code] = None

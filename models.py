@@ -2,6 +2,7 @@ import json
 import os
 from typing import Dict, List, Any, Optional
 import datetime
+from urllib.parse import quote
 
 import mongoengine as me
 
@@ -77,6 +78,7 @@ class LogAbstract(me.Document):
     path = me.StringField(required=True)
     hash_digest = me.StringField()
     data = me.DictField()
+    env = me.StringField()
 
     meta: Dict[str, Any] = {"allow_inheritance": True, "abstract": True}
 
@@ -100,17 +102,16 @@ class DAOWrapper:
         db_password,
         db_host,
         db_port,
+        env,
         generic_course=Course,
         generic_log=Log,
     ):
-        uri = "mongodb://{0}:{1}@{2}:{3}/{4}".format(
-            db_user, db_password, db_host, db_port, DB_NAME
-        )
-
+        port_number = int(db_port)
         # NOTE: 'connect=False' is to avoid connection pooling sine PyMongo is not fork-safe
-        me.connect(host=uri, connect=False, maxPoolSize=1)
+        me.connect(DB_NAME, host=db_host, port=port_number, username=db_user, password=db_password, connect=False, maxPoolSize=1)
         self.generic_course = generic_course
         self.generic_log = generic_log
+        self.env = env
 
     def insert_courses(self, courses: List[CourseAbstract]):
         try:
@@ -144,10 +145,9 @@ class DAOWrapper:
                     cns.score = cns.score + 1
 
                     # The new course name has earned enough to become the default course name for this course
-                    # TODO: Before enabling this branch, need to ensure no abuse can occur
-                    # if cns.score > SCORE_THRESHOLD:
-                    #     course.name = cns.name
-                    #     course.course_name_scores.pop(i)
+                    if cns.score > SCORE_THRESHOLD:
+                        course.name = cns.name
+                        course.course_name_scores.pop(i)
 
                     course.course_name_scores.sort()
                 else:
@@ -183,6 +183,7 @@ class DAOWrapper:
             log.path = _path
             log.hash_digest = hash_digest
             log.data = _data
+            log.env = self.env
 
             return log.save()
 
@@ -219,6 +220,7 @@ if __name__ == "__main__":
         os.environ["DB_PASSWORD"],
         os.environ["DB_HOST"],
         os.environ["DB_PORT"],
+        os.environ.get("ENV", "manual"),
         Course,
         Log,
     )
