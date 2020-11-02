@@ -1,5 +1,4 @@
-# Because I have TypeScript installed globally
-npm link typescript
+mkdir -p client_build
 
 # yarn add typescript # Might need to run this the first time
 yarn webpack
