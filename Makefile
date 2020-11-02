@@ -10,7 +10,7 @@ help:
  setup:	
 	pip3 install pipenv	
 	# Use python3 for the enviroment	
-	pipenv install --dev --python=3.6
+	pipenv install --dev --python=3.6.9
 
 	# Install NPM packages
 	npm install -g typescript
