@@ -1,7 +1,7 @@
 import unittest
 import models
 import os
-from typing import List, Dict
+from typing import List
 
 TEST_COURSE_DICT = {
     'MATH100': 'Differential Calculus with Applications to Physical Sciences and Engineering',
@@ -104,6 +104,7 @@ class TestDAOCourses(unittest.TestCase):
     def test_too_many_names(self):
         code = 'MATH152'
 
+        name = None
         for i in range(0, models.MAX_NAME_COUNT):
             name = 'TestTitle' + str(i)
             course: models.CourseAbstract = self.dao_wrapper.upsert_course(code, name)

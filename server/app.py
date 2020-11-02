@@ -81,7 +81,7 @@ def suggestCourses():
 def index():
     return render_template("index.html", api_url=API_URL)
 
-
+ mongoexport -h ds131237.mlab.com:31237 -d ubcapi -c live -u arashubcapi -p  -o courses-live
 @app.after_request
 def apply_caching(response):
     """Response headers added for CORS protection"""

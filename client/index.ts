@@ -59,13 +59,6 @@
         // https://github.com/crclayton
         // https://github.com/crclayton/ubc-unofficial-transcript-exporter
 
-        // remove page clutter
-        ['#UbcHeaderWrapper',
-            '#UbcBottomInfoWrapper',
-            '#UbcUtilNavWrapper'].forEach(function (n) {
-                document.querySelector(n)!.remove();
-            });
-
         // remove calculator and semester navigator
         ['#calculator_title',
             '#calculator_title_text',

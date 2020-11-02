@@ -7,7 +7,7 @@ name = "pypi"
 
 [requires]
 
-python_full_version = "3.6.8"
+python_full_version = "3.6.9"
 
 
 [packages]
@@ -16,10 +16,3 @@ mongoengine = "==0.16.3"
 Flask = "==1.0.2"
 flask-sslify = "==0.1.5"
 typing = "==3.6.2"
-gunicorn = "*"
-
-
-[dev-packages]
-
-black = "*"
-mypy = "*"

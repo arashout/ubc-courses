@@ -2,12 +2,9 @@ import json
 import os
 from typing import Dict, List, Any, Optional
 import datetime
-from urllib.parse import quote
-
-import mongoengine as me
 
 CURRENT_DIRECTORY = os.path.dirname(__file__)
-PATH_JSON_COURSES = os.path.join(CURRENT_DIRECTORY, "data", "courses.json")
+PATH_JSON_COURSES = os.path.join(CURRENT_DIRECTORY, "data", "courses-live.json")
 
 DB_NAME = "ubcapi"
 
@@ -16,9 +13,10 @@ SCORE_THRESHOLD = 10
 MAX_NAME_COUNT = 10
 
 
-class CourseNameScore(me.EmbeddedDocument):
-    name = me.StringField(required=True)
-    score = me.IntField(min_value=1, default=1)
+class CourseNameScore:
+    def __init__(self, name: str) -> None:
+        name = name
+        score = 1
 
     def clean(self):
         self.name = self.name.strip()
