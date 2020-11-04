@@ -9,8 +9,6 @@
   "devDependencies": {
     "@types/node": "^12.0.8",
     "bookmarklet": "^1.0.1",
-    "serverless-python-requirements": "^4.3.0",
-    "serverless-wsgi": "^1.7.2",
     "ts-loader": "^4.4.1",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "^4.35.0",
