@@ -9,28 +9,13 @@ import models
 app = Flask(__name__)
 
 if os.environ.get("DEV") is not None:
-    dao_wrapper = models.DAOWrapper(
-        os.environ["DB_USER"],
-        os.environ["DB_PASSWORD"],
-        os.environ["DB_HOST"],
-        os.environ["DB_PORT"],
-        "dev",
-        models.CourseDev,
-        models.LogDev,
-    )
+    dao_wrapper = models.DAOWrapper(models.DEV_DB_URI)
     print("DEV environment variable detected! Running in development mode")
 else:
-    dao_wrapper = models.DAOWrapper(
-        os.environ["DB_USER"],
-        os.environ["DB_PASSWORD"],
-        os.environ["DB_HOST"],
-        os.environ["DB_PORT"],
-        os.environ.get("ENV", "heroku")
-    )
+    dao_wrapper = models.DAOWrapper(models.PROD_DB_URI)
 
 PATTERN_GET_COURSE_CODE = re.compile(r"c\d+")
 
-API_URL = os.environ["UBCAPI_URL"] 
 DIGEST_KEY = "digest_key"
 
 
@@ -68,20 +53,17 @@ def suggestCourses():
     for code in course_codes:
         suggested_name = all_args.get(code, None)
         if suggested_name is not None:
-            course = dao_wrapper.upsert_course(code, suggested_name)
+            course = dao_wrapper.suggest_course(code, suggested_name)
             response_dict[code] = str(course)
         else:
             response_dict[code] = None
-    
-    dao_wrapper.insert_log(request.path, response_dict.copy(), all_args.get(DIGEST_KEY, None))
    
     return jsonify(response_dict)
 
 @app.route("/")
 def index():
-    return render_template("index.html", api_url=API_URL)
+    return render_template("index.html")
 
- mongoexport -h ds131237.mlab.com:31237 -d ubcapi -c live -u arashubcapi -p  -o courses-live
 @app.after_request
 def apply_caching(response):
     """Response headers added for CORS protection"""
@@ -92,4 +74,4 @@ def apply_caching(response):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0")
