@@ -1,0 +1,8 @@
+README.md
+data/*
+client/*
+scripts/*
+examples/*
+
+.git/*
+__tests__/*

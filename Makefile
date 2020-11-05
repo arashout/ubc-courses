@@ -20,6 +20,7 @@ setup:
 	# Install 
 	yarn sls plugin install -n serverless-wsgi
 	yarn sls plugin install -n serverless-python-requirements
+	yarn sls plugin install -n serverless-ignore
 
 build_client:
 	./scripts/build.sh
@@ -33,7 +34,7 @@ local_deploy:
 	pipenv run yarn sls wsgi serve
 deploy:
 	./scripts/build.sh
-	yarn sls deploy
+	pipenv run yarn sls deploy
 activate:	
 	pipenv shell
 test:	

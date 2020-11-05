@@ -11,13 +11,14 @@ provider:
 
 plugins:
   - serverless-wsgi
-
+  - serverless-python-requirements
+  - serverless-ignore
 custom:
-  pythonRequirements:
-    dockerFile: ./Dockerfile
   wsgi:
     app: app.app
     packRequirements: false
+  ignore:
+    file: '.slsignore'
 
 functions:
   app:

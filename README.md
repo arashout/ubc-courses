@@ -30,8 +30,6 @@ This is what the transcript looked like before
 ![Before Transcript Example](./examples/Before.png "Before Transcript Example")
 
 ## How it works:
-This application is split into 2 parts the [the bookmarklet](#Bookmarklet) and [the server](#The Server)
-
 ### Bookmarklet
 - The bookmarklet is JavaScript code that runs on the user's browser to:
 1. Prompts the user for input regarding what features to remove
@@ -40,7 +38,8 @@ This application is split into 2 parts the [the bookmarklet](#Bookmarklet) and [
 4. Populates the new column called 'Course Names'
 
 ### The Server
-1. Respond to GET requests from client
+Is a lambda function which uses 
+
 
 ## Credits:
 - [crclayton](https://github.com/crclayton) originally created the bookmarklet that formatted the transcript, I'm simply building off of it.
