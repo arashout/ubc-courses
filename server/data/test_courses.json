@@ -1,9 +1,0 @@
-{
-    "courses": [
-        {"code":"MATH319","name":"Partial Differential Equations","update_time":"20200110T205858233069","course_name_scores":[{"name":"Introduction to Partial Differential Equations","score":3}]},
-        {"code":"MATH320","name":"Real Variables I","course_name_scores":[]},
-        {"code":"MATH321","name":"Real Variables II","course_name_scores":[]},
-        {"code":"MATH322","name":"Introduction to Group Theory","course_name_scores":[]},
-        {"code":"MATH323","name":"Introduction to Rings and Modules","course_name_scores":[{"name":"Applied Abstract Algebra","score":1}],"update_time":"20190516T201016051324"}
-    ]
-}

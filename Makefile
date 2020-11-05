@@ -7,29 +7,36 @@ help:
 	@echo "    make build_client bookmarkletify the typescript code"	
 	@echo "    exit             leave virtual environment"	
 
- setup:	
-	pip3 install pipenv	
-	# Use python3 for the enviroment	
+setup:
+	pip3 install pipenv
+	# Use python3 for the enviroment
 	pipenv install --dev --python=3.6.9
+	pipenv lock -r > requirements.txt
 
 	# Install NPM packages
-	npm install -g typescript
-	npm install -g serverless
-	npm install
+	yarn global add typescript
+	yarn install
 
 	# Install 
-	sls plugin install -n serverless-wsgi
-	sls plugin install -n serverless-python-requirements
- build_client:
+	yarn sls plugin install -n serverless-wsgi
+	yarn sls plugin install -n serverless-python-requirements
+
+build_client:
 	./scripts/build.sh
- local_deploy:
-	sls wsgi serve
- deploy:
+
+docker:
+	docker build --tag arashout/ubccourses:0.1 .
+	docker push arashout/ubccourses:0.1
+docker_run:
+	docker run -p 5000:5000 ubccourses:0.1
+local_deploy:
+	pipenv run yarn sls wsgi serve
+deploy:
 	./scripts/build.sh
-	sls deploy
- activate:	
+	yarn sls deploy
+activate:	
 	pipenv shell
- test:	
+test:	
 	pipenv run python3 test_models.py	
 
- .PHONY: help activate test 
+.PHONY: help activate test 
