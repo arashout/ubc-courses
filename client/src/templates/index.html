@@ -12,39 +12,70 @@
         <h1></h1>
         <h1 class="is-size-1">Bookmarklet</h1>
         <!-- JAVASCRIPT_SOURCE will get replace by contents of bookmarklet.js by build script-->
-        <p class="is-size-5">Drag the link below to your bookmarks:<br/>
-            <a href="{{JAVASCRIPT_SOURCE}}">UBCTranscript-{{DATETIME}}</a>
+        <p class="is-size-5">Drag the link below to your bookmarks:<br />
+            <a class='tag is-info is-large' href="{{JAVASCRIPT_SOURCE}}">UBCTranscript-{{DATETIME}}</a>
         </p>
 
         <h1 class="is-size-1">API</h1>
-        <div>
-            <h4 class="is-size-4">Commands:</h4>
-            <p>Base URL: <a href="{{API_URL}}">{{API_URL}}</a></p>
+        <div class="level">
+            <div class="level-left">
+                <div class='is-size-2 level-item'>Current Status:</div>
+                <div id="apiStatus" class='is-narrow tag is-large level-item'>Pending</div>
+            </div>
+        </div>
+
+        <div class="container">
             <table class="table" style="width:100%">
                 <tr>
-                    <th>METHOD</th>
-                    <th>COMMAND</th>
-                    <th>PARAMETERS</th>
+                    <th>EXAMPLE</th>
                     <th>RESPONSE</th>
                 </tr>
                 <tr>
-                    <td>GET</td>
-                    <td>/courses?c0=
-                        <strong>course_code0</strong>&#38;c1=
-                        <strong>course_code1</strong> (...)</td>
-                    <td>course_code : string
-                        <br> e.g. MATH 307 </td>
-                    <td>course_object array : {'code', 'name'}[]
-                        <br> e.g. [ {'code' : 'MATH 307', 'name' : 'Applied Linear Algebra'}, {'code' : 'PHYS 170',
-                        'name'
-                        : 'Mechanics
-                        I'}, ]
+                    <td><code id=exampleURL>http "$UBCAPI/courses?c0=MATH152"</code></td>
+                    <td><code id="response">
+                    </code>
                     </td>
                 </tr>
             </table>
         </div>
     </div>
-
 </body>
+
+<script type="text/javascript">
+    const exampleElement = document.querySelector('#exampleURL')
+    const exampleRequest = "{{API_URL}}/courses?c0=MATH100&c1=MATH152"
+    exampleElement.innerHTML = `http '${exampleRequest}'`;
+
+    const apiStatusElement = document.querySelector('#apiStatus');
+
+    fetch(exampleRequest, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+    }).then((resp) => {
+        if (resp.status == 200) {
+            apiStatusElement.innerHTML = 'Online';
+            apiStatusElement.classList.add("is-success");
+            return resp.json();
+        } else {
+            apiStatusElement.innerHTML = 'Offline';
+            apiStatusElement.classList.add("is-warning");
+            throw resp.statusText;
+        }
+    })
+    .then(data => {
+        console.log()
+        const responseElement = document.querySelector('#response');
+        responseElement.innerHTML = JSON.stringify(data);
+    })
+    .catch(e => {
+        apiStatusElement.innerHTML = 'Offline';
+        apiStatusElement.classList.add("is-danger");
+        console.error(e);
+    });
+</script>
 
 </html>
