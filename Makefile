@@ -30,6 +30,7 @@ docker_run:
 local_deploy:
 	pipenv run yarn sls wsgi serve
 deploy:
+	# TODO: Add a clause in serverless for adding S3 permissions to lamba
 	pipenv run yarn sls deploy
 activate:	
 	pipenv shell

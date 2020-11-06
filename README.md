@@ -38,7 +38,8 @@ This is what the transcript looked like before
 4. Populates the new column called 'Course Names'
 
 ### The Server
-Is a lambda function which uses 
+A AWS Lambda function built with Flask + Serverless (Honestly, probably a mistake to use flask for such a simple app if I was planning on using AWS Lambda 👐, TODO: Move to EC2?)     
+It is responsible for responding to the bookmarklet's requests and accessing S3 where the course information is stored.
 
 
 ## Credits:
