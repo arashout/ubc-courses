@@ -7,7 +7,7 @@ name = "pypi"
 python_full_version = "3.6.9"
 
 [packages]
-Flask = "==1.0.2"
+Flask = "==1.1.2"
 flask-sslify = "==0.1.5"
 typing = "==3.6.2"
 tinydb = "*"
