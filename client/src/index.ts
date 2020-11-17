@@ -31,8 +31,12 @@
 
 
     const DIGEST_KEY = 'digest_key';
-    const API_URL = 'https://v7rr12wbr7.execute-api.us-west-2.amazonaws.com/prod';
+
+    // TODO: Remove this hardcoded value and make reference to something else
+    const API_URL = 'https://ogzp9le070.execute-api.us-west-2.amazonaws.com/prod'; 
+    const FRONTEND_URL = 'https://ubc-courses-frontend.s3-us-west-2.amazonaws.com/index.html';
     const INITIAL_TEXT_ATTRIBUTE = 'data-initial-text';
+    const OWNER = '/u/arashout on reddit';
 
     const COL_INDEX_RETRIEVAL = Object.freeze({
         COURSE_CODE: 0,
@@ -173,6 +177,11 @@
         })
         .catch((reason: string) => {
             console.log(reason);
+            alert(`
+            Something went wrong contacting the back-end server. 
+            Perhaps you are using an old version of the bookmarklet?
+            Go to ${FRONTEND_URL} (Check if the back-end is online) and drag the bookmarklet into your bookmarks again.
+            If it is still broken contact ${OWNER}`)
         })
         .then((courseMap: CourseMap) => {
             courseList.forEach((courseCode: string) => {
@@ -192,7 +201,6 @@
             });
         });
 
-    // TODO: Send edit courses event if map is not empty and print button is pressed
     const printButton = iframe.getElementById('printer');
     console.assert(!!printButton);
     printButton.addEventListener('click', () => {
